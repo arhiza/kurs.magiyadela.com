@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Все курсы</title>
+</head>
+<body>
+
+{% if courses|length == 0 %}
+   Ничего нет. Попробуйте зайти сюда когда-нибудь потом.
+{% else %}
+{% for course in courses %}
+    <h2><a href="{% url 'course' course.pk %}">{{ course.name }}</a></h2>
+    {{ course.price }}<br>
+    {% if course.link %}Купить можно <a href="{{ course.link }}">тут</a>.<br>{% endif %}
+{% endfor %}
+{% endif %}
+
+</body>
+</html>

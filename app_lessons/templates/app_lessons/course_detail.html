@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ course.name }}</title>
+</head>
+<body>
+
+{% if course.status == "NEW" %}
+    Курс не готов, только ПРЕДПРОСМОТР<br><br>
+{% endif %}
+<h1>{{ course.name }}</h1>
+{{ course.about|safe }}
+<h2>Цена</h2>
+{{ course.price }}
+{% if course.link %}
+<br>
+<a href="{{ course.link }}">Купить тут</a>
+{% endif %}
+
+<h2>Уроки курса</h2>
+<ul>
+{% for lesson in course.lessons.all %}
+    <li>{% if is_editor or course_paid %}
+    <a href="{% url 'lesson' lesson.pk %}">{{ lesson.name }}</a>
+            {% if course_paid %}
+                (пометка "пройдено")
+            {% endif %}
+        {% else %}
+    {{ lesson.name }}
+        {% endif %}
+    </li>
+{% endfor %}
+</ul>
+
+<h2>Отзывы</h2>
+...
+
+</body>
+</html>

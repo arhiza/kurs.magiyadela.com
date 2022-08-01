@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ lesson.name }}</title>
+</head>
+<body>
+
+<h1>{{ lesson.name }}</h1>
+{% if lesson.course.status == "NEW" %}
+    курс не активен, урок доступен только для ПРЕДПРОСМОТРа<br><br>
+{% endif %}
+Урок из курса <a href="{% url 'course' lesson.course.pk %}">"{{ lesson.course }}"</a><br>
+{% if is_editor or course_paid %}
+{% if lesson.prev_lesson %}
+    Предыдущий урок - <a href="{% url 'lesson' lesson.prev_lesson.pk %}">{{ lesson.prev_lesson.name }}</a><br>
+{% endif %}
+{% if lesson.next_lesson %}
+    Следующий урок - <a href="{% url 'lesson' lesson.next_lesson.pk %}">{{ lesson.next_lesson.name }}</a><br>
+{% endif %}
+<br>
+{% if lesson.video %}
+<iframe width="560" height="315" src="https://www.youtube.com/embed/{{ lesson.code_video }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<br>{% endif %}
+<br>
+{{ lesson.info|safe }}<br>
+
+{% if lesson.questions %}
+<h2>Домашнее задание</h2>
+{{ lesson.questions|safe }}
+{% endif %}
+{% endif %}
+
+{% if course_paid %}
+    <br><br>(тут должна быть кнопочка "пометить урок пройденным")
+    <br><br>(и еще должна быть форма, куда можно задать вопрос по уроку)
+{% endif %}
+
+</body>
+</html>
