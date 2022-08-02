@@ -10,7 +10,7 @@
     Курс не готов, только ПРЕДПРОСМОТР<br><br>
 {% endif %}
 <h1>{{ course.name }}</h1>
-{{ course.about|safe }}
+<pre>{{ course.about|safe }}</pre>
 <h2>Цена</h2>
 {{ course.price }}
 {% if course.link %}
