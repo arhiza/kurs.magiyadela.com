@@ -1,13 +1,21 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from .models import Lesson, Course
+from .models import Lesson, Course, Category
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'count_of_courses']
+
+    def count_of_courses(self, obj):
+        return obj.courses.count()
 
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
     list_display = ['name', 'course', 'ordering', 'view_link']
-    ordering = ['course', 'ordering']
+    ordering = ['-course', '-ordering']
     list_filter = ['course']
 
     def view_link(self, obj):
@@ -28,7 +36,8 @@ class LessonInLine(admin.TabularInline):
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ['name', 'status', 'price', 'view_link']
+    list_display = ['name', 'status', 'category', 'price', 'is_free', 'view_link']
+    list_filter = ['category', 'status']
     inlines = [LessonInLine]
 
     def view_link(self, obj):

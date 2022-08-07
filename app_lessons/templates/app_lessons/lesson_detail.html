@@ -11,7 +11,7 @@
     курс не активен, урок доступен только для ПРЕДПРОСМОТРа<br><br>
 {% endif %}
 Урок из курса <a href="{% url 'course' lesson.course.pk %}">"{{ lesson.course }}"</a><br>
-{% if is_editor or course_paid %}
+{% if can_see or course_paid %}
 {% if lesson.prev_lesson %}
     Предыдущий урок - <a href="{% url 'lesson' lesson.prev_lesson.pk %}">{{ lesson.prev_lesson.name }}</a><br>
 {% endif %}

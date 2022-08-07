@@ -55,6 +55,7 @@ class TestAnonimVisitor(TestCase):
         self.assertNotContains(response, "Секретный текст")
         url2 = reverse('lesson', args=[2])
         self.assertNotContains(response, url2)
+
         url3 = reverse('lesson', args=[3])
         response = self.client.get(url3)
         self.assertEqual(response.status_code, 404)
@@ -129,3 +130,40 @@ class TestAdminView(TestCase):
         response = self.client.get(url3)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Текст, доступный только админу")
+
+
+class TestFreeCourse(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        course3 = Course.objects.create(name="Курс3", status=Course.OK, is_free=True, about="Информация о бесплатном курсе3")
+        lesson4 = Lesson.objects.create(name="Урок4", course=course3, info="Текст, видимый без регистрации и записи на курс.")
+        lesson5 = Lesson.objects.create(name="Урок5", course=course3, info="Второй текст для курса3.")
+
+    def test_main_page(self):
+        response = self.client.get("/")
+        url1 = reverse('course', args=[1])
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Курс3")
+        self.assertContains(response, url1)
+
+    def test_links_to_courses(self):
+        url1 = reverse('course', args=[1])
+        response = self.client.get(url1)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Курс3")
+        self.assertContains(response, "Информация о бесплатном курсе3")
+        self.assertContains(response, "Урок4")
+        url_lesson = reverse('lesson', args=[1])
+        self.assertContains(response, url_lesson)
+
+    def test_links_to_lessons(self):
+        url1 = reverse('lesson', args=[1])
+        response = self.client.get(url1)
+        url_course = reverse('course', args=[1])
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Урок4")
+        self.assertContains(response, "Курс3")
+        self.assertContains(response, url_course)
+        self.assertContains(response, "Текст, видимый без регистрации и записи на курс.")
+        url5 = reverse('lesson', args=[2])
+        self.assertContains(response, url5)

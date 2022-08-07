@@ -19,10 +19,12 @@ class CourseView(generic.DetailView):
     def get_context_data(self, **kwargs):
         # проверяем, показывать ли пользователю ссылки на уроки
         context = super().get_context_data(**kwargs)
-        if self.request.user.is_authenticated and self.request.user.has_perm('app_lessons.view_lesson'):
-            context['is_editor'] = True
+        if context.get("course").is_free or \
+                (self.request.user.is_authenticated and
+                 self.request.user.has_perm('app_lessons.view_lesson')):
+            context['can_see'] = True
         else:
-            context['is_editor'] = False
+            context['can_see'] = False
         # if self.request.user.is_authenticated:  # TODO ...AND у юзера куплен этот курс
         #     context['course_paid'] = True
         # else:
@@ -45,10 +47,12 @@ class LessonView(generic.DetailView):
     def get_context_data(self, **kwargs):
         # проверяем, показывать ли пользователю информацию из урока
         context = super().get_context_data(**kwargs)
-        if self.request.user.is_authenticated and self.request.user.has_perm('app_lessons.view_lesson'):
-            context['is_editor'] = True
+        if context.get("lesson").course.is_free or \
+                (self.request.user.is_authenticated and
+                 self.request.user.has_perm('app_lessons.view_lesson')):
+            context['can_see'] = True
         else:
-            context['is_editor'] = False
+            context['can_see'] = False
         # if self.request.user.is_authenticated:  # TODO ...AND у юзера куплен этот курс
         #    context['course_paid'] = True
         # else:

@@ -3,6 +3,13 @@ from django.db.models import Max
 from django.urls import reverse
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+
 class Course(models.Model):
     OK = 'OK'
     NEW = 'NEW'
@@ -15,8 +22,11 @@ class Course(models.Model):
         choices=STATUS_CHOICES,
         default=NEW,
     )
+    category = models.ForeignKey('Category', default=1, on_delete=models.SET_DEFAULT,
+                                 related_name="courses", verbose_name="Категория")
     name = models.CharField(max_length=100, verbose_name="Название курса")
     about = models.TextField(verbose_name="Описание")
+    is_free = models.BooleanField(default=False, verbose_name="курс бесплатный")
     price = models.CharField(blank=True, null=True, max_length=20, verbose_name="Цена, с пометкой, в какой валюте")
     link = models.URLField(blank=True, null=True, max_length=200, verbose_name="Ссылка на магазин, где купить")
 
@@ -28,7 +38,8 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
-    course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name="lessons", verbose_name="Часть какого курса")
+    course = models.ForeignKey('Course', on_delete=models.CASCADE,
+                               related_name="lessons", verbose_name="Часть какого курса")
     name = models.CharField(max_length=100, verbose_name="Название урока")
     info = models.TextField(verbose_name="Основная часть урока")
     video = models.URLField(blank=True, null=True, verbose_name="Видео на ютубе, если есть")
