@@ -47,7 +47,8 @@ class LessonView(generic.DetailView):
     def get_context_data(self, **kwargs):
         # проверяем, показывать ли пользователю информацию из урока
         context = super().get_context_data(**kwargs)
-        if context.get("lesson").course.is_free or \
+        lesson = context.get("lesson")
+        if lesson.course.is_free or lesson.is_intro or \
                 (self.request.user.is_authenticated and
                  self.request.user.has_perm('app_lessons.view_lesson')):
             context['can_see'] = True

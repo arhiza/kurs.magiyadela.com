@@ -41,6 +41,7 @@ class Lesson(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE,
                                related_name="lessons", verbose_name="Часть какого курса")
     name = models.CharField(max_length=100, verbose_name="Название урока")
+    is_intro = models.BooleanField(default=False, verbose_name="Вводный урок, доступен без покупки курса")
     info = models.TextField(verbose_name="Основная часть урока")
     video = models.URLField(blank=True, null=True, verbose_name="Видео на ютубе, если есть")
     questions = models.TextField(blank=True, null=True, verbose_name="Вопросы для домашней работы")

@@ -21,7 +21,7 @@
 <h2>Уроки курса</h2>
 <ul>
 {% for lesson in course.lessons.all %}
-    <li>{% if can_see or course_paid %}
+    <li>{% if can_see or course_paid or lesson.is_intro %}
     <a href="{% url 'lesson' lesson.pk %}">{{ lesson.name }}</a>
             {% if course_paid %}
                 (пометка "пройдено")

@@ -14,7 +14,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ['name', 'course', 'ordering', 'view_link']
+    list_display = ['name', 'is_intro', 'course', 'ordering', 'view_link']
     ordering = ['-course', '-ordering']
     list_filter = ['course']
 
@@ -30,7 +30,7 @@ class LessonAdmin(admin.ModelAdmin):
 
 class LessonInLine(admin.TabularInline):
     model = Lesson
-    fields = ['name', 'ordering']
+    fields = ['name', 'is_intro', 'ordering']
     ordering = ['ordering']
 
 
