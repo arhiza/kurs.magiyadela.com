@@ -23,11 +23,11 @@
 <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ lesson.code_video }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 <br>{% endif %}
 <br>
-<pre>{{ lesson.info|safe }}</pre><br>
+<div style="white-space: pre-wrap;">{{ lesson.info|safe }}</div><br>
 
 {% if lesson.questions %}
 <h2>Домашнее задание</h2>
-<pre>{{ lesson.questions|safe }}</pre>
+<div style="white-space: pre-wrap;">{{ lesson.questions|safe }}</div>
 {% endif %}
 {% endif %}
 
