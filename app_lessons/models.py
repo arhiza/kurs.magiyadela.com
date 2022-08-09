@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Max
 from django.urls import reverse
@@ -87,3 +88,14 @@ class Lesson(models.Model):
 
     class Meta:
         ordering = ['ordering']
+
+
+class CoursesForUsers(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, verbose_name="курс", related_name="to_users")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="пользователь", related_name="to_courses")
+    is_active = models.BooleanField(default=False, verbose_name="курс подключен")
+    info = models.CharField(max_length=200, blank=True, null=True, verbose_name="примечание")
+
+    class Meta:
+        verbose_name_plural = "Подключенные курсы"
+        unique_together = ['course', 'user']

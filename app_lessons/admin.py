@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from .models import Lesson, Course, Category
+from .models import Lesson, Course, Category, CoursesForUsers
 
 
 @admin.register(Category)
@@ -48,3 +48,8 @@ class CourseAdmin(admin.ModelAdmin):
             )
         )
     view_link.allow_tags = True
+
+
+@admin.register(CoursesForUsers)
+class CoursesForUsersAdmin(admin.ModelAdmin):
+    list_display = ['user', 'course', 'is_active', 'info']

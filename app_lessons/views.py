@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 
-from .models import Lesson, Course
+from .models import Lesson, Course, CoursesForUsers
 
 
 class CourseView(generic.DetailView):
@@ -25,10 +25,14 @@ class CourseView(generic.DetailView):
             context['can_see'] = True
         else:
             context['can_see'] = False
-        # if self.request.user.is_authenticated:  # TODO ...AND у юзера куплен этот курс
-        #     context['course_paid'] = True
-        # else:
-        #    context['course_paid'] = False
+        if self.request.user.is_authenticated:
+            # TODO ...возможно, понадобится показать кнопку "подключите мне этот курс",
+            #  если записи с таким курсом для этого юзера нет, либо ничего не показывать,
+            #  если запись с is_active=False
+            rel = CoursesForUsers.objects.filter(user=self.request.user,
+                                                 course=context.get("course"), is_active=True).first()
+            if rel:
+                context['course_paid'] = True
         return context
 
 
@@ -54,10 +58,12 @@ class LessonView(generic.DetailView):
             context['can_see'] = True
         else:
             context['can_see'] = False
-        # if self.request.user.is_authenticated:  # TODO ...AND у юзера куплен этот курс
-        #    context['course_paid'] = True
-        # else:
-        #    context['course_paid'] = False
+        if self.request.user.is_authenticated:
+            rel = CoursesForUsers.objects.filter(user=self.request.user,
+                                                 course=context.get("lesson").course,
+                                                 is_active=True).first()
+            if rel:
+                context['course_paid'] = True
         return context
 
 
