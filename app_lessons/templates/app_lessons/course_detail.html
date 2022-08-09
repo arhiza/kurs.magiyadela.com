@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ course.name }}</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}{{ course.name }}{% endblock %}
+
+{% block page %}
 
 {% if course.status == "NEW" %}
     Курс не готов, только ПРЕДПРОСМОТР<br><br>
 {% endif %}
 <h1>{{ course.name }}</h1>
-<div style="white-space: pre-wrap;">{{ course.about|safe }}</div>
+<div class="article">{{ course.about|safe }}</div>
 <h2>Цена</h2>
 {{ course.price }}
 {% if course.link %}
@@ -33,8 +31,4 @@
 {% endfor %}
 </ul>
 
-<h2>Отзывы</h2>
-...
-
-</body>
-</html>
+{% endblock %}

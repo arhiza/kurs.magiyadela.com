@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Все курсы</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Все курсы{% endblock %}
+
+{% block page %}
 
 {% if courses|length == 0 %}
    Ничего нет. Попробуйте зайти сюда когда-нибудь потом.
@@ -16,5 +14,4 @@
 {% endfor %}
 {% endif %}
 
-</body>
-</html>
+{% endblock %}

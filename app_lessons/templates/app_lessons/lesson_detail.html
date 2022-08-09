@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ lesson.name }}</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}{{ lesson.name }}{% endblock %}
+
+{% block page %}
 
 <h1>{{ lesson.name }}</h1>
 {% if lesson.course.status == "NEW" %}
@@ -23,11 +21,11 @@
 <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ lesson.code_video }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 <br>{% endif %}
 <br>
-<div style="white-space: pre-wrap;">{{ lesson.info|safe }}</div><br>
+<div class="article">{{ lesson.info|safe }}</div><br>
 
 {% if lesson.questions %}
 <h2>Домашнее задание</h2>
-<div style="white-space: pre-wrap;">{{ lesson.questions|safe }}</div>
+<div class="article">{{ lesson.questions|safe }}</div>
 {% endif %}
 {% endif %}
 
@@ -36,5 +34,4 @@
     <br><br>(и еще должна быть форма, куда можно задать вопрос по уроку)
 {% endif %}
 
-</body>
-</html>
+{% endblock %}
