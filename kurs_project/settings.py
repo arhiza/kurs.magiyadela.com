@@ -134,3 +134,50 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = '...@gmail.com'
 EMAIL_HOST_PASSWORD = '...'
 EMAIL_PORT = 587
+
+if DEBUG:
+    LOG_DIR = BASE_DIR / 'LOGS'
+else:
+    LOG_DIR = BASE_DIR.parent / 'LOGS'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] {message}', 'style': '{',
+        }
+    },
+    'handlers': {
+        'django.server': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': LOG_DIR / 'server.log',
+            'formatter': 'django.server',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': LOG_DIR / 'info.log',
+            'formatter': 'django.server',
+        }
+    },
+    'loggers': {
+        'django': {  #
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        '': {  # для пользовательских записей в лог - logger.info("...")
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'django.server': {
+            'handlers': ['django.server'],
+            'level': 'INFO',
+            'propagate': False
+        }
+    }
+}
+

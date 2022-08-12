@@ -1,7 +1,12 @@
+import logging
+
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 
 from .models import Lesson, Course, CoursesForUsers
+
+
+# logger = logging.getLogger(__name__)
 
 
 class CourseView(generic.DetailView):
