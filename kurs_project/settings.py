@@ -136,9 +136,9 @@ EMAIL_HOST_PASSWORD = '...'
 EMAIL_PORT = 587
 
 if DEBUG:
-    LOG_DIR = BASE_DIR / 'LOGS'
+    LOG_DIR = BASE_DIR / 'logs'
 else:
-    LOG_DIR = BASE_DIR.parent / 'public_html' / 'LOGS'
+    LOG_DIR = BASE_DIR.parent / 'logs'
 
 LOGGING = {
     'version': 1,
