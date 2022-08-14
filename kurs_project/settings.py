@@ -123,6 +123,12 @@ if DEBUG:
 else:
     STATIC_ROOT = BASE_DIR.parent / 'public_html' / 'static'
 
+MEDIA_URL = 'media/'
+if DEBUG:
+    MEDIA_ROOT = BASE_DIR / 'media'
+else:
+    MEDIA_ROOT = BASE_DIR.parent / 'public_html' / 'media'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 

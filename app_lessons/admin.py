@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from .models import Lesson, Course, Category, CoursesForUsers
+from .models import Lesson, Course, Category, CoursesForUsers, FilePicture
 
 
 @admin.register(Category)
@@ -53,3 +53,17 @@ class CourseAdmin(admin.ModelAdmin):
 @admin.register(CoursesForUsers)
 class CoursesForUsersAdmin(admin.ModelAdmin):
     list_display = ['user', 'course', 'is_active', 'info']
+
+
+@admin.register(FilePicture)
+class FilePictureAdmin(admin.ModelAdmin):
+    list_display = ['file', 'f_course', 'f_lesson']
+
+    def filename(self, obj):
+        return obj.file.name
+
+    def f_course(self, obj):
+        return obj.course.first()
+
+    def f_lesson(self, obj):
+        return obj.lesson.first()

@@ -8,6 +8,9 @@
     Курс не готов, только ПРЕДПРОСМОТР<br><br>
 {% endif %}
 <h1>{{ course.name }}</h1>
+    {% if course.picture %}
+    <img class="article-image" src="{{ course.picture.file.url }}">
+    {% endif %}
 <div class="article">{{ course.about|safe }}</div>
 <h2>Цена</h2>
 {{ course.price }}

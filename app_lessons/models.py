@@ -1,6 +1,11 @@
+import os
+
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Max
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.urls import reverse
 
 
@@ -26,8 +31,10 @@ class Course(models.Model):
     category = models.ForeignKey('Category', default=1, on_delete=models.SET_DEFAULT,
                                  related_name="courses", verbose_name="Категория")
     name = models.CharField(max_length=100, verbose_name="Название курса")
+    picture = models.ForeignKey('FilePicture', related_name="course", null=True,
+                                blank=True, on_delete=models.SET_NULL, verbose_name="Файл с иллюстрацией")
     about = models.TextField(verbose_name="Описание")
-    is_free = models.BooleanField(default=False, verbose_name="курс бесплатный")
+    is_free = models.BooleanField(default=False, verbose_name="Курс бесплатный")
     price = models.CharField(blank=True, null=True, max_length=20, verbose_name="Цена, с пометкой, в какой валюте")
     link = models.URLField(blank=True, null=True, max_length=200, verbose_name="Ссылка на магазин, где купить")
 
@@ -43,6 +50,8 @@ class Lesson(models.Model):
                                related_name="lessons", verbose_name="Часть какого курса")
     name = models.CharField(max_length=100, verbose_name="Название урока")
     is_intro = models.BooleanField(default=False, verbose_name="Вводный урок, доступен без покупки курса")
+    picture = models.ForeignKey('FilePicture', related_name="lesson", null=True,
+                                blank=True, on_delete=models.SET_NULL, verbose_name="Файл с иллюстрацией")
     info = models.TextField(verbose_name="Основная часть урока")
     video = models.URLField(blank=True, null=True, verbose_name="Видео на ютубе, если есть")
     questions = models.TextField(blank=True, null=True, verbose_name="Вопросы для домашней работы")
@@ -99,3 +108,38 @@ class CoursesForUsers(models.Model):
     class Meta:
         verbose_name_plural = "Подключенные курсы"
         unique_together = ['course', 'user']
+
+
+class FilePicture(models.Model):
+    file = models.FileField(upload_to="tmp", verbose_name='файл с картинкой')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='дата создания')
+
+    @receiver(post_save, sender=Course)
+    def upd_path_with_course(sender, instance, **kwargs):
+        pic = instance.picture
+        if pic:
+            pic.check_path(instance.id)
+
+    @receiver(post_save, sender=Lesson)
+    def upd_path_with_lesson(sender, instance, **kwargs):
+        pic = instance.picture
+        if pic:
+            pic.check_path(instance.course.id)
+
+    def check_path(self, course_id):
+        ''' переместить картинку в папку того курса, для которого картинку загрузили '''
+        if self.file.name.startswith('tmp'):  # or len(self.file.name.split('/')) < 3:
+            initial_path = self.file.path
+            filename = self.file.name.split('/')[-1]
+            path = 'courses/' + str(course_id)
+            new_name = os.path.join(path, filename)
+            new_path = os.path.join(settings.MEDIA_ROOT, new_name)
+            if not os.path.exists(os.path.dirname(new_path)):
+                os.makedirs(os.path.dirname(new_path))
+            os.rename(initial_path, new_path)
+            # Update the file field
+            self.file.name = new_name
+            self.save()
+
+    def __str__(self):
+        return self.file.name
