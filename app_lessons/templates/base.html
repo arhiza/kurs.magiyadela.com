@@ -8,7 +8,13 @@
 </head>
 <body>
 <div id="wrapper">
-<a href="{% url 'all_courses' %}">На главную</a><br>
+<a href="{% url 'all_courses' %}">На главную</a>
+{% if request.user.is_authenticated %}
+    Вы вошли, как {{ request.user.username }}. <a href="{% url 'logout' %}">ВЫХОД</a>
+    {% if request.user.is_staff %}<a href="{% url 'admin:index' %}">Админка</a>{% endif %}
+{% else %}
+    <a href="{% url 'login' %}">Вход/Регистрация</a>
+{% endif %}
 <hr>
 <div id="main">
 
