@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-gq#1#z6=zv@ftn^3*d!n4ju4u$**vov+zf0qqz6bh#z+p)i(l3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['kurs.magiyadela.com', '127.0.0.1']
+ALLOWED_HOSTS = ['www.kurs.magiyadela.com', 'kurs.magiyadela.com', '127.0.0.1']
 
 
 # Application definition
