@@ -49,24 +49,25 @@ def login_view(request):
         if form.is_valid():
             username = form.cleaned_data['login']
             password = form.cleaned_data['password']
+            # для входа годится любой логин, если он уже есть в базе данных
             user = authenticate(username=username, password=password)
             if user:
                 login(request, user)
                 return redirect(reverse('all_courses'))
-            user, created = User.objects.get_or_create(username=username)
-            if created:  # пользователя с таким логином не было, теперь создался
-                if check_email_address_validity(username):
+            # для регистрации - только логин в виде емейла
+            if check_email_address_validity(username):
+                user, created = User.objects.get_or_create(username=username)
+                if created:  # пользователя с таким логином не было, теперь создался
                     user.email = username
-                user.set_password(password)
-                user.save()
-                login(request, user)
-                return redirect(reverse('all_courses'))
-            else:
-                # print("пользователь есть, пароль не подходит")
-                form.add_error('__all__', 'Проверьте правильность введенных данных')
-                if user.email == username:
+                    user.set_password(password)
+                    user.save()
+                    login(request, user)
+                    return redirect(reverse('all_courses'))
+                else:
+                    form.add_error('password', 'Пароль не подходит')
                     # TODO нужно показать ссылку для восстановления пароля
-                    pass
+            else:
+                form.add_error('login', 'Некорректный адрес электронной почты')
     else:
         form = LoginForm()
     return render(request, 'app_users/login.html', {'form': form})
