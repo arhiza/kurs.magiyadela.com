@@ -7,14 +7,15 @@
     <link href='{% static "/css/main.css" %}' rel='stylesheet' type='text/css'>
 </head>
 <body>
-<div id="wrapper">
-<a href="{% url 'all_courses' %}">На главную</a>
+<div id="wrapper"><ul id="head_menu">
+<li><a href="{% url 'all_courses' %}">На главную</a></li>
 {% if request.user.is_authenticated %}
-    Вы вошли, как {{ request.user.username }}. <a href="{% url 'logout' %}">ВЫХОД</a>
-    {% if request.user.is_staff %}<a href="{% url 'admin:index' %}">Админка</a>{% endif %}
+    <li>Вы вошли, как {{ request.user.username }}. <a href="{% url 'logout' %}">ВЫХОД</a></li>
+    {% if request.user.is_staff %}<li><a href="{% url 'admin:index' %}">Админка</a></li>{% endif %}
 {% else %}
-    <a href="{% url 'login' %}">Вход/Регистрация</a>
+    <li><a href="{% url 'login' %}">Вход/Регистрация</a></li>
 {% endif %}
+</ul>
 <hr>
 <div id="main">
 
