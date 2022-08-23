@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 
+from .private import PrivateConfig
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -19,11 +21,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-gq#1#z6=zv@ftn^3*d!n4ju4u$**vov+zf0qqz6bh#z+p)i(l3'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['www.kurs.magiyadela.com', 'kurs.magiyadela.com', '127.0.0.1']
 
@@ -114,37 +113,27 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.0/howto/static-files/
-
-STATIC_URL = 'static/'
-if DEBUG:
-    STATIC_ROOT = BASE_DIR / 'static'
-else:
-    STATIC_ROOT = BASE_DIR.parent / 'public_html' / 'static'
-
-MEDIA_URL = 'media/'
-if DEBUG:
-    MEDIA_ROOT = BASE_DIR / 'media'
-else:
-    MEDIA_ROOT = BASE_DIR.parent / 'public_html' / 'media'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = '...@gmail.com'
-EMAIL_HOST_PASSWORD = '...'
-EMAIL_PORT = 587
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.0/howto/static-files/
 
+STATIC_URL = 'static/'
+MEDIA_URL = 'media/'
 if DEBUG:
+    STATIC_ROOT = BASE_DIR / 'static'
+    MEDIA_ROOT = BASE_DIR / 'media'
     LOG_DIR = BASE_DIR / 'logs'
+    PRIVATE = BASE_DIR
 else:
+    STATIC_ROOT = BASE_DIR.parent / 'public_html' / 'static'
+    MEDIA_ROOT = BASE_DIR.parent / 'public_html' / 'media'
     LOG_DIR = BASE_DIR.parent / 'logs'
+    PRIVATE = BASE_DIR.parent
 
 LOGGING = {
     'version': 1,
@@ -156,12 +145,6 @@ LOGGING = {
         }
     },
     'handlers': {
-        'django.server': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': LOG_DIR / 'server.log',
-            'formatter': 'django.server',
-        },
         'file': {
             'class': 'logging.FileHandler',
             'filename': LOG_DIR / 'info.log',
@@ -179,11 +162,18 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
-        'django.server': {
-            'handlers': ['django.server'],
-            'level': 'INFO',
-            'propagate': False
-        }
     }
 }
+
+
+prv = PrivateConfig(PRIVATE / 'private.json')
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = prv.get('SECRET_KEY')
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = prv.get('EMAIL', 'HOST')
+EMAIL_HOST_USER = prv.get('EMAIL', 'HOST_USER')
+EMAIL_HOST_PASSWORD = prv.get('EMAIL', 'HOST_PASSWORD')
+EMAIL_PORT = prv.get('EMAIL', 'HOST_PORT')
 

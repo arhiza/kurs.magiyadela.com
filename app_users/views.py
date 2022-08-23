@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.urls import reverse
 
+from kurs_project import settings
 from .forms import RestorePassword, LoginForm
 
 
@@ -17,16 +18,23 @@ def restore_password(request):
         if form.is_valid():
             user_email = form.cleaned_data["email"]
             new_password = User.objects.make_random_password()
+            # todo лучше не создавать пользователя, а сообщать, что такого нет, если его нет
             current_user, created = User.objects.get_or_create(email=user_email)
             if created:
                 current_user.username = user_email
+            # todo и не сбрасывать пароль, а сохранять закешированный в отдельном поле
             current_user.set_password(new_password)
             current_user.save()
-            send_mail(subject="Восстановление пароля",
-                      message=new_password,
-                      from_email="admin@company.com",
+            try:  # todo тут должно быть нормальное содержимое, а не только пароль
+                send_mail(subject="Восстановление пароля",
+                      message=f'''Новые данные для входа в систему:
+логин: {user_email}
+пароль: {new_password}''',
+                      from_email=settings.EMAIL_HOST_USER,
                       recipient_list=[user_email])
-            return HttpResponse('Письмо с новым паролем отправлено')
+                return HttpResponse('Письмо с новым паролем отправлено')
+            except:
+                return HttpResponse('ОШИБКА: отправить письмо не удалось')
     restore_password_form = RestorePassword()
     context = {
         'form': restore_password_form
