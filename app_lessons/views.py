@@ -1,6 +1,6 @@
 import logging
 
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseNotFound
 from django.views import generic
 
 from .models import Lesson, Course, CoursesForUsers
@@ -11,19 +11,13 @@ from .models import Lesson, Course, CoursesForUsers
 
 class CourseView(generic.DetailView):
     model = Course
-
-    def dispatch(self, request, pk, *args, **kwargs):
-        # смотреть неготовые курсы можно только редактору,
-        # остальным - неготовых курсов как бы нет совсем
-        if request.user.is_authenticated and self.request.user.has_perm('app_lessons.view_course'):
-            course = get_object_or_404(Course, pk=pk)
-        else:
-            course = get_object_or_404(Course, status=Course.OK, pk=pk)
-        return super().dispatch(request, pk, *args, **kwargs)
+    context_object_name = 'course'
+    queryset = Course.objects.select_related('picture').prefetch_related('lessons')
 
     def get_context_data(self, **kwargs):
         # проверяем, показывать ли пользователю ссылки на уроки
         context = super().get_context_data(**kwargs)
+        # print("context", context)
         if context.get("course").is_free or \
                 (self.request.user.is_authenticated and
                  self.request.user.has_perm('app_lessons.view_lesson')):
@@ -40,18 +34,20 @@ class CourseView(generic.DetailView):
                 context['course_paid'] = True
         return context
 
+    def dispatch(self, request, pk, *args, **kwargs):
+        # смотреть неготовые курсы можно только редактору,
+        # остальным - неготовых курсов как бы нет совсем
+        res = super().dispatch(request, pk, *args, **kwargs)
+        if res.context_data['course'].status != Course.OK:
+            if not request.user.is_authenticated or not request.user.has_perm('app_lessons.view_course'):
+                return HttpResponseNotFound()
+        return res
+
 
 class LessonView(generic.DetailView):
     model = Lesson
-
-    def dispatch(self, request, pk, *args, **kwargs):
-        # смотреть уроки для неготовых курсов можно только редактору,
-        # остальным - таких уроков как бы нет совсем
-        if request.user.is_authenticated and self.request.user.has_perm('app_lessons.view_lesson'):
-            lesson = get_object_or_404(Lesson, pk=pk)
-        else:
-            lesson = get_object_or_404(Lesson, course__status=Course.OK, pk=pk)
-        return super().dispatch(request, pk, *args, **kwargs)
+    context_object_name = 'lesson'
+    queryset = Lesson.objects.select_related('course').select_related('picture')
 
     def get_context_data(self, **kwargs):
         # проверяем, показывать ли пользователю информацию из урока
@@ -71,10 +67,20 @@ class LessonView(generic.DetailView):
                 context['course_paid'] = True
         return context
 
+    def dispatch(self, request, pk, *args, **kwargs):
+        # смотреть уроки для неготовых курсов можно только редактору,
+        # остальным - таких уроков как бы нет совсем
+        res = super().dispatch(request, pk, *args, **kwargs)
+        if res.context_data['lesson'].course.status != Course.OK:
+            if not request.user.is_authenticated or not request.user.has_perm('app_lessons.view_lesson'):
+                return HttpResponseNotFound()
+        return res
+
 
 class CourseListView(generic.ListView):
     model = Course
     context_object_name = 'courses'
 
     def get_queryset(self):
-        return Course.objects.filter(status=Course.OK).all()
+        return Course.objects.filter(status=Course.OK).select_related('category').\
+            order_by('category__id').all()
