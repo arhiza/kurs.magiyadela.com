@@ -50,6 +50,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+if DEBUG:
+    INSTALLED_APPS = INSTALLED_APPS + ['debug_toolbar']
+    INTERNAL_IPS = [
+        '127.0.0.1',
+    ]
+    MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE
+
 ROOT_URLCONF = 'kurs_project.urls'
 
 TEMPLATES = [
