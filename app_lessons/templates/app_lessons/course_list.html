@@ -7,11 +7,15 @@
 {% if courses|length == 0 %}
    Ничего нет. Попробуйте зайти сюда когда-нибудь потом.
 {% else %}
-{% for course in courses %}
-    <h2><a href="{% url 'course' course.pk %}">{{ course.name }}</a></h2>
-    {{ course.price }}<br>
-    {% if course.link %}Купить можно <a href="{{ course.link }}">тут</a>.<br>{% endif %}
-{% endfor %}
+    {% regroup courses by category as categories_list %}
+    {% for category in categories_list %}
+        <h2>{{ category.grouper }}</h2>
+        <ul>
+        {% for course in category.list %}
+        <li{% if course.is_free %} class="free"{% endif %}><a href="{% url 'course' course.pk %}">{{ course.name }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
 {% endif %}
 
 {% endblock %}

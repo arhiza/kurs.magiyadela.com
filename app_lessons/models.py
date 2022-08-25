@@ -15,6 +15,10 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = 'Категории'
+        verbose_name = 'Категория'
+
 
 class Course(models.Model):
     OK = 'OK'
@@ -43,6 +47,10 @@ class Course(models.Model):
 
     def get_absolute_url(self):
         return reverse('course', args=[str(self.id)])
+
+    class Meta:
+        verbose_name_plural = 'Курсы'
+        verbose_name = 'Курс'
 
 
 class Lesson(models.Model):
@@ -97,6 +105,8 @@ class Lesson(models.Model):
 
     class Meta:
         ordering = ['ordering']
+        verbose_name_plural = 'Уроки'
+        verbose_name = 'Урок'
 
 
 class CoursesForUsers(models.Model):
@@ -107,6 +117,7 @@ class CoursesForUsers(models.Model):
 
     class Meta:
         verbose_name_plural = "Подключенные курсы"
+        verbose_name = 'Подключенный курс'
         unique_together = ['course', 'user']
 
 
@@ -143,3 +154,7 @@ class FilePicture(models.Model):
 
     def __str__(self):
         return self.file.name
+
+    class Meta:
+        verbose_name_plural = 'Картинки'
+        verbose_name = 'Картинка'

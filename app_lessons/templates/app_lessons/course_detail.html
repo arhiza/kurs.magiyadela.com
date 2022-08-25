@@ -7,26 +7,36 @@
 {% if course.status == "NEW" %}
     Курс не готов, только ПРЕДПРОСМОТР<br><br>
 {% endif %}
+
 <h1>{{ course.name }}</h1>
     {% if course.picture %}
     <img class="article-image" src="{{ course.picture.file.url }}">
     {% endif %}
 <div class="article">{{ course.about|safe }}</div>
-<h2>Цена</h2>
+<h2>Цена</h2><p>
+    {% if course.is_free %}
+        бесплатно
+    {% else %}
 {{ course.price }}
+    {% endif %}</p>
 {% if course.link %}
-<br>
-<a href="{{ course.link }}">Купить тут</a>
+<p><a href="{{ course.link }}">Купить тут</a></p>
 {% endif %}
+    {% if form %}
+        <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Записаться на курс</button>
+        </form>
+    {% else %}
+        <!-- > DEBUG: course_paid.is_active = {{ course_paid.is_active }}</ -->
+    {% endif %}
 
 <h2>Уроки курса</h2>
 <ul>
 {% for lesson in course.lessons.all %}
-    <li>{% if can_see or course_paid or lesson.is_intro %}
+    <li{% if lesson_is_done %} class="done"{% endif %}>{% if can_see or lesson.is_intro %}
     <a href="{% url 'lesson' lesson.pk %}">{{ lesson.name }}</a>
-            {% if course_paid %}
-                (пометка "пройдено")
-            {% endif %}
         {% else %}
     {{ lesson.name }}
         {% endif %}

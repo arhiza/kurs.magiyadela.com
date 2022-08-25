@@ -53,6 +53,8 @@ class CourseAdmin(admin.ModelAdmin):
 @admin.register(CoursesForUsers)
 class CoursesForUsersAdmin(admin.ModelAdmin):
     list_display = ['user', 'course', 'is_active', 'info']
+    ordering = ['is_active']
+    list_filter = ['course']
 
 
 @admin.register(FilePicture)
