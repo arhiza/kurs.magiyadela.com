@@ -13,6 +13,7 @@ from .models import Lesson, Course, CoursesForUsers
 
 class CourseView(generic.DetailView):
     model = Course
+    slug_field = 'url'
     context_object_name = 'course'
     queryset = Course.objects.select_related('picture').prefetch_related('lessons').\
         prefetch_related('to_users')
@@ -22,28 +23,24 @@ class CourseView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         can_see = False
         if self.request.user.is_authenticated:
-            # TODO ...возможно, понадобится показать кнопку "подключите мне этот курс",
-            #  если записи с таким курсом для этого юзера нет, либо ничего не показывать,
-            #  если запись с is_active=False
             rel = context.get('course').to_users.filter(user=self.request.user).first()
             context['course_paid'] = rel
             if not rel:
-                form = JoinToCourse()
+                form = JoinToCourse(initial={'course_id': context.get('course').id})
                 context['form'] = form
             if rel and rel.is_active:
                 can_see = True
-        if can_see or context.get("course").is_free or \
-                (self.request.user.is_authenticated and
-                 self.request.user.has_perm('app_lessons.view_lesson')):
-            context['can_see'] = True
-        else:
-            context['can_see'] = False
+        if not can_see and (context.get('course').is_free or
+                            (self.request.user.is_authenticated and
+                             self.request.user.has_perm('app_lessons.view_lesson'))):
+            can_see = True
+        context['can_see'] = can_see
         return context
 
-    def dispatch(self, request, pk, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         # смотреть неготовые курсы можно только редактору,
         # остальным - неготовых курсов как бы нет совсем
-        res = super().dispatch(request, pk, *args, **kwargs)
+        res = super().dispatch(request, *args, **kwargs)
         if request.method == "POST":
             return res
         if res.context_data['course'].status != Course.OK:
@@ -51,22 +48,25 @@ class CourseView(generic.DetailView):
                 return HttpResponseNotFound()
         return res
 
-    def post(self, request, pk, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         form = JoinToCourse(request.POST)
         if form.is_valid() and request.user.is_authenticated:
+            pk = form.cleaned_data['course_id']
             user = request.user
             rel = CoursesForUsers.objects.filter(course__id=pk, user=user).first()
             if not rel:
                 course = Course.objects.get(pk=pk)
                 if course.is_free:
-                    CoursesForUsers.objects.create(course=course, user=user, is_active=True, info='(самостоятельно на бесплатный курс)')
+                    CoursesForUsers.objects.create(course=course, user=user, is_active=True,
+                                                   info='(самостоятельно на бесплатный курс)')
                 else:
                     CoursesForUsers.objects.create(course=course, user=user, is_active=False)
-        return HttpResponseRedirect(reverse('course', args=[pk]))
+        return HttpResponseRedirect(reverse('course', kwargs=kwargs))
 
 
 class LessonView(generic.DetailView):
     model = Lesson
+    slug_field = 'url'
     context_object_name = 'lesson'
     queryset = Lesson.objects.select_related('course').select_related('picture')
 
@@ -88,10 +88,10 @@ class LessonView(generic.DetailView):
                 context['course_paid'] = True
         return context
 
-    def dispatch(self, request, pk, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         # смотреть уроки для неготовых курсов можно только редактору,
         # остальным - таких уроков как бы нет совсем
-        res = super().dispatch(request, pk, *args, **kwargs)
+        res = super().dispatch(request, *args, **kwargs)
         if res.context_data['lesson'].course.status != Course.OK:
             if not request.user.is_authenticated or not request.user.has_perm('app_lessons.view_lesson'):
                 return HttpResponseNotFound()

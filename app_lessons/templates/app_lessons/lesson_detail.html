@@ -6,15 +6,15 @@
 
 <h1>{{ lesson.name }}</h1>
 {% if lesson.course.status == "NEW" %}
-    курс не активен, урок доступен только для ПРЕДПРОСМОТРа<br><br>
+    <p>курс не активен, урок доступен только для ПРЕДПРОСМОТРа</p>
 {% endif %}
-Урок из курса <a href="{% url 'course' lesson.course.pk %}">"{{ lesson.course }}"</a><br>
+Урок из курса <a href="{{ lesson.course.get_absolute_url }}">"{{ lesson.course }}"</a><br>
 {% if can_see or course_paid %}
 {% if lesson.prev_lesson %}
-    Предыдущий урок - <a href="{% url 'lesson' lesson.prev_lesson.pk %}">{{ lesson.prev_lesson.name }}</a><br>
+    Предыдущий урок - <a href="{{ lesson.prev_lesson.get_absolute_url }}">{{ lesson.prev_lesson.name }}</a><br>
 {% endif %}
 {% if lesson.next_lesson %}
-    Следующий урок - <a href="{% url 'lesson' lesson.next_lesson.pk %}">{{ lesson.next_lesson.name }}</a><br>
+    Следующий урок - <a href="{{ lesson.next_lesson.get_absolute_url }}">{{ lesson.next_lesson.name }}</a><br>
 {% endif %}
 <br>
 {% if lesson.video %}
@@ -31,7 +31,7 @@
 <div class="article">{{ lesson.questions|safe }}</div>
 {% endif %}
 {% endif %}
-
+<p></p>
 {% if course_paid %}
     <br><br>(тут должна быть кнопочка "пометить урок пройденным")
     <br><br>(и еще должна быть форма, куда можно задать вопрос по уроку)

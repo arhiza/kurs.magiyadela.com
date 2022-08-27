@@ -35,6 +35,7 @@ class Course(models.Model):
     category = models.ForeignKey('Category', default=1, on_delete=models.SET_DEFAULT,
                                  related_name="courses", verbose_name="Категория")
     name = models.CharField(max_length=100, verbose_name="Название курса")
+    url = models.SlugField(null=True, unique=True, verbose_name="Название-урл")
     picture = models.ForeignKey('FilePicture', related_name="course", null=True,
                                 blank=True, on_delete=models.SET_NULL, verbose_name="Файл с иллюстрацией")
     about = models.TextField(verbose_name="Описание")
@@ -46,7 +47,9 @@ class Course(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('course', args=[str(self.id)])
+        if self.url:
+            return reverse('course', args=[self.url])
+        return reverse('course', args=[int(self.id)])
 
     class Meta:
         verbose_name_plural = 'Курсы'
@@ -57,7 +60,8 @@ class Lesson(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE,
                                related_name="lessons", verbose_name="Часть какого курса")
     name = models.CharField(max_length=100, verbose_name="Название урока")
-    is_intro = models.BooleanField(default=False, verbose_name="Вводный урок, доступен без покупки курса")
+    url = models.SlugField(null=True, unique=True, verbose_name="Название-урл")
+    is_intro = models.BooleanField(default=False, verbose_name="Вводный урок")
     picture = models.ForeignKey('FilePicture', related_name="lesson", null=True,
                                 blank=True, on_delete=models.SET_NULL, verbose_name="Файл с иллюстрацией")
     info = models.TextField(verbose_name="Основная часть урока")
@@ -89,6 +93,8 @@ class Lesson(models.Model):
     next_lesson = property(_next_lesson)
 
     def get_absolute_url(self):
+        if self.url:
+            return reverse('lesson', args=[self.url])
         return reverse('lesson', args=[str(self.id)])
 
     def __str__(self):

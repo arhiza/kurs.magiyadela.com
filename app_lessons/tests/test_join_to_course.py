@@ -21,7 +21,7 @@ class TestAnonimFree(TestCase):
 
     def test_no_post(self):
         url1 = reverse('course', args=[1])
-        response = self.client.post(url1, {'buy_course': True})
+        response = self.client.post(url1, {'buy_course': True, 'course_id': 1})
         self.assertRedirects(response, reverse('course', args=[1]), status_code=302,
                              target_status_code=200)
         response = self.client.get(url1)
@@ -46,7 +46,7 @@ class TestAnonimNotFree(TestCase):
 
     def test_no_post(self):
         url1 = reverse('course', args=[1])
-        response = self.client.post(url1, {'buy_course': True})
+        response = self.client.post(url1, {'buy_course': True, 'course_id': 1})
         self.assertRedirects(response, reverse('course', args=[1]), status_code=302,
                              target_status_code=200)
         response = self.client.get(url1)
@@ -76,7 +76,7 @@ class TestAuthFree(TestCase):
 
     def test_post_joined(self):
         url1 = reverse('course', args=[1])
-        response = self.client.post(url1, {'buy_course': True})
+        response = self.client.post(url1, {'buy_course': True, 'course_id': 1})
         self.assertRedirects(response, reverse('course', args=[1]), status_code=302,
                              target_status_code=200)
         response = self.client.get(url1)
@@ -106,7 +106,7 @@ class TestAuthNotFree(TestCase):
 
     def test_post_no_joined(self):
         url1 = reverse('course', args=[1])
-        response = self.client.post(url1, {'buy_course': True})
+        response = self.client.post(url1, {'buy_course': True, 'course_id': 1})
         self.assertRedirects(response, reverse('course', args=[1]), status_code=302,
                              target_status_code=200)
         response = self.client.get(url1)
