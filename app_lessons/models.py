@@ -47,9 +47,7 @@ class Course(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        if self.url:
-            return reverse('course', args=[self.url])
-        return reverse('course', args=[int(self.id)])
+        return reverse('course', args=[self.url])
 
     class Meta:
         verbose_name_plural = 'Курсы'
@@ -93,9 +91,7 @@ class Lesson(models.Model):
     next_lesson = property(_next_lesson)
 
     def get_absolute_url(self):
-        if self.url:
-            return reverse('lesson', args=[self.url])
-        return reverse('lesson', args=[str(self.id)])
+        return reverse('lesson', args=[self.url])
 
     def __str__(self):
         return self.name

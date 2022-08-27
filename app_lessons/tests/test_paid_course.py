@@ -1,7 +1,6 @@
 from django.test import TestCase
 
 from django.contrib.auth.models import User
-from django.urls import reverse
 
 from app_lessons.models import Course, Lesson, CoursesForUsers
 
@@ -12,9 +11,9 @@ USER_PASSWORD = 'xdrthnjil'
 class TestPaidCourse(TestCase):
     @classmethod
     def setUpTestData(cls):
-        course1 = Course.objects.create(name="Курс1", status=Course.OK, about="Информация о курсе")
-        lesson1 = Lesson.objects.create(name="Урок1", course=course1, info="Первый текст урока")
-        lesson2 = Lesson.objects.create(name="Урок2", course=course1, info="Второй урок курса")
+        course1 = Course.objects.create(name="Курс1", url="test1", status=Course.OK, about="Информация о курсе")
+        lesson1 = Lesson.objects.create(name="Урок1", url="urok1", course=course1, info="Первый текст урока")
+        lesson2 = Lesson.objects.create(name="Урок2", url="urok2", course=course1, info="Второй урок курса")
         user = User.objects.create(username=USERNAME)
         CoursesForUsers.objects.create(course=course1, user=user, is_active=True)
 
@@ -24,30 +23,32 @@ class TestPaidCourse(TestCase):
 
     def test_main_page(self):
         response = self.client.get("/")
-        url1 = reverse('course', args=[1])
+        course1 = Course.objects.get(pk=1)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Курс1")
-        self.assertContains(response, url1)
+        self.assertContains(response, course1.name)
+        self.assertContains(response, course1.get_absolute_url())
 
     def test_links_to_courses(self):
-        url1 = reverse('course', args=[1])
+        course1 = Course.objects.get(pk=1)
+        url1 = course1.get_absolute_url()
         response = self.client.get(url1)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Курс1")
-        self.assertContains(response, "Информация о курсе")
-        self.assertContains(response, "Урок1")
-        url_lesson = reverse('lesson', args=[1])
-        self.assertContains(response, url_lesson)
+        self.assertContains(response, course1.name)
+        self.assertContains(response, course1.about)
+        lesson1 = Lesson.objects.get(pk=1)
+        self.assertContains(response, lesson1.name)
+        self.assertContains(response, lesson1.get_absolute_url())
 
     def test_links_to_lessons(self):
-        url1 = reverse('lesson', args=[1])
-        response = self.client.get(url1)
-        url_course = reverse('course', args=[1])
+        lesson1 = Lesson.objects.get(pk=1)
+        response = self.client.get(lesson1.get_absolute_url())
+        course1 = Course.objects.get(pk=1)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Урок1")
-        self.assertContains(response, "Курс1")
-        self.assertContains(response, url_course)
-        self.assertContains(response, "Первый текст урока")
-        url2 = reverse('lesson', args=[2])
-        self.assertContains(response, url2)
+        self.assertContains(response, lesson1.name)
+        self.assertContains(response, lesson1.info)
+        self.assertContains(response, course1.name)
+        self.assertContains(response, course1.get_absolute_url())
+        lesson2 = Lesson.objects.get(pk=2)
+        self.assertContains(response, lesson2.name)
+        self.assertContains(response, lesson2.get_absolute_url())
 

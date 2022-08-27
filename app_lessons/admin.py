@@ -30,7 +30,7 @@ class LessonAdmin(admin.ModelAdmin):
 
 class LessonInLine(admin.TabularInline):
     model = Lesson
-    fields = ['name', 'is_intro', 'ordering']
+    fields = ['name', 'url', 'is_intro', 'ordering']
     ordering = ['ordering']
 
 
