@@ -12,7 +12,9 @@
         <h2>{{ category.grouper }}</h2>
         <ul>
         {% for course in category.list %}
+            {% if course.url %}
         <li{% if course.is_free %} class="free"{% endif %}><a href="{{ course.get_absolute_url }}">{{ course.name }}</a></li>
+            {% endif %}
         {% endfor %}
         </ul>
     {% endfor %}

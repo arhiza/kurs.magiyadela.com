@@ -35,12 +35,14 @@
 <h2>Уроки курса</h2>
 <ul>
 {% for lesson in course.lessons.all %}
+    {% if lesson.url %}
     <li{% if lesson_is_done %} class="done"{% endif %}>{% if can_see or lesson.is_intro %}
     <a href="{{ lesson.get_absolute_url }}">{{ lesson.name }}</a>
         {% else %}
     {{ lesson.name }}
         {% endif %}
     </li>
+    {% endif %}
 {% endfor %}
 </ul>
 
