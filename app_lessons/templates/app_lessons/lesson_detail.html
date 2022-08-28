@@ -4,35 +4,39 @@
 
 {% block page %}
 
+<i><a href="{{ lesson.course.get_absolute_url }}">"{{ lesson.course }}"</a></i>
 <h1>{{ lesson.name }}</h1>
+
 {% if lesson.course.status == "NEW" %}
     <p>курс не активен, урок доступен только для ПРЕДПРОСМОТРа</p>
 {% endif %}
-Урок из курса <a href="{{ lesson.course.get_absolute_url }}">"{{ lesson.course }}"</a><br>
+
 {% if can_see or course_paid %}
-{% if lesson.prev_lesson %}
-    Предыдущий урок - <a href="{{ lesson.prev_lesson.get_absolute_url }}">{{ lesson.prev_lesson.name }}</a><br>
-{% endif %}
-{% if lesson.next_lesson %}
-    Следующий урок - <a href="{{ lesson.next_lesson.get_absolute_url }}">{{ lesson.next_lesson.name }}</a><br>
-{% endif %}
-<br>
-{% if lesson.video %}
-<iframe width="560" height="315" src="https://www.youtube.com/embed/{{ lesson.code_video }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<br>{% endif %}
     {% if lesson.picture %}
-    <img class="article-image" src="{{ lesson.picture.file.url }}">
+    <p><img class="article-image" src="{{ lesson.picture.file.url }}"></p>
     {% endif %}
 
-<div class="article">{{ lesson.info|safe }}</div><br>
+    {% if lesson.video %}
+    <p><iframe width="560" height="315" src="https://www.youtube.com/embed/{{ lesson.code_video }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+    {% endif %}
 
-{% if lesson.questions %}
-<h2>Домашнее задание</h2>
-<div class="article">{{ lesson.questions|safe }}</div>
+    <p><div class="article">{{ lesson.info|safe }}</div></p>
+
+    {% if lesson.questions %}
+        <h2>Домашнее задание</h2>
+        <p><div class="article">{{ lesson.questions|safe }}</div></p>
+    {% endif %}
+
+    {% if lesson.prev_lesson %}
+        <p><a href="{{ lesson.prev_lesson.get_absolute_url }}">Предыдущий урок</a></p>
+    {% endif %}
+    {% if lesson.next_lesson %}
+        <p><a href="{{ lesson.next_lesson.get_absolute_url }}">Следующий урок</a></p>
+    {% endif %}
+
 {% endif %}
-{% endif %}
-<p></p>
-{% if course_paid %}
+
+{% if course_paid__todo %}
     <br><br>(тут должна быть кнопочка "пометить урок пройденным")
     <br><br>(и еще должна быть форма, куда можно задать вопрос по уроку)
 {% endif %}
