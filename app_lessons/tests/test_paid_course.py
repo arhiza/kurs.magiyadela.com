@@ -49,6 +49,6 @@ class TestPaidCourse(TestCase):
         self.assertContains(response, course1.name)
         self.assertContains(response, course1.get_absolute_url())
         lesson2 = Lesson.objects.get(pk=2)
-        self.assertContains(response, lesson2.name)
+        # self.assertContains(response, lesson2.name)  # вместо названия урока надпись "следующий урок"
         self.assertContains(response, lesson2.get_absolute_url())
 
