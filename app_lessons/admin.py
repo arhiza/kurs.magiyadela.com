@@ -14,7 +14,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ['name', 'is_intro', 'course', 'ordering', 'view_link']
+    list_display = ['name', 'is_intro', 'course', 'is_child', 'ordering', 'view_link']
     ordering = ['-course', '-ordering']
     list_filter = ['course']
 

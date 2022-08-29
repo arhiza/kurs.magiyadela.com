@@ -60,6 +60,7 @@ class Lesson(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название урока")
     url = models.SlugField(null=True, unique=True, verbose_name="Название-урл")
     is_intro = models.BooleanField(default=False, verbose_name="Вводный урок")
+    is_child = models.BooleanField(default=False, verbose_name="Дочерний урок")
     picture = models.ForeignKey('FilePicture', related_name="lesson", null=True,
                                 blank=True, on_delete=models.SET_NULL, verbose_name="Файл с иллюстрацией")
     info = models.TextField(verbose_name="Основная часть урока")

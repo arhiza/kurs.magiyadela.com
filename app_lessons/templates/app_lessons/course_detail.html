@@ -36,11 +36,14 @@
 <ul>
 {% for lesson in course.lessons.all %}
     {% if lesson.url %}
-    <li{% if lesson_is_done %} class="done"{% endif %}>{% if can_see or lesson.is_intro %}
+    <li{% if lesson_is_done %} class="done"{% endif %}>
+    {% if lesson.is_child %}<ul><li>{% endif %}
+        {% if can_see or lesson.is_intro %}
     <a href="{{ lesson.get_absolute_url }}">{{ lesson.name }}</a>
         {% else %}
     {{ lesson.name }}
         {% endif %}
+    {% if lesson.is_child %}</li></ul>{% endif %}
     </li>
     {% endif %}
 {% endfor %}
