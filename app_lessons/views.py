@@ -1,6 +1,7 @@
 import logging
 
 from django.http import HttpResponseNotFound, HttpResponseRedirect
+from django.shortcuts import render
 from django.urls import reverse
 from django.views import generic
 
@@ -105,3 +106,7 @@ class CourseListView(generic.ListView):
     def get_queryset(self):
         return Course.objects.filter(status=Course.OK).select_related('category').\
             order_by('category__id').all()
+
+
+def page_not_found_view(request, exception):
+    return render(request, '404.html', status=404)
