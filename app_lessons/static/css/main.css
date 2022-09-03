@@ -8,7 +8,7 @@ body {
 }
 
 #main {
-  margin: 0px 90px;
+  margin: 0px 5%;
   padding: 30px 0px;
 }
 
@@ -20,6 +20,7 @@ body {
 .article-image {
   margin: 10px 0px 20px 0px;
   max-width: 800px;
+  width: 100%;
 }
 
 ul#head_menu {
@@ -28,4 +29,8 @@ ul#head_menu {
 #head_menu li {
   display: inline-block;
   padding-left: 30px;
+}
+
+li.free {
+  list-style-image: url("/static/admin/img/icon-viewlink.svg");
 }
