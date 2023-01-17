@@ -14,6 +14,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"url": ("name",)}
     list_display = ['name', 'is_intro', 'course', 'is_child', 'ordering', 'view_link']
     ordering = ['-course', '-ordering']
     list_filter = ['course']
@@ -30,12 +31,14 @@ class LessonAdmin(admin.ModelAdmin):
 
 class LessonInLine(admin.TabularInline):
     model = Lesson
+    prepopulated_fields = {"url": ("name",)}
     fields = ['name', 'url', 'is_intro', 'ordering']
     ordering = ['ordering']
 
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"url": ("name",)}
     list_display = ['name', 'status', 'category', 'price', 'is_free', 'view_link']
     list_filter = ['category', 'status']
     inlines = [LessonInLine]
