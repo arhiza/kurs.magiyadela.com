@@ -13,7 +13,7 @@
     <img class="article-image" src="{{ course.picture.file.url }}">
     {% endif %}
 <div class="article">{{ course.about|safe }}</div>
-<h2>Цена</h2><p>
+<h4>Цена</h4><p>
     {% if course.is_free %}
         бесплатно
     {% else %}
@@ -26,10 +26,11 @@
         <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Записаться на курс</button>
+        <button type="submit">Отправить заявку на курс</button>
         </form>
     {% else %}
         <!-- > DEBUG: course_paid.is_active = {{ course_paid.is_active }}</ -->
+        <i>{{ info_about_order }}</i>
     {% endif %}
 
 <h2>Уроки курса</h2>

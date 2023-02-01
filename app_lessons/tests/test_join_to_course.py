@@ -78,7 +78,7 @@ class TestAuthFree(TestCase):
         url1 = course.get_absolute_url()
         response = self.client.get(url1)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Записаться на курс")
+        self.assertContains(response, "Отправить заявку на курс")
 
     def test_post_joined(self):
         course = Course.objects.get(pk=1)
@@ -111,7 +111,7 @@ class TestAuthNotFree(TestCase):
         url1 = course.get_absolute_url()
         response = self.client.get(url1)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Записаться на курс")
+        self.assertContains(response, "Отправить заявку на курс")
 
     def test_post_no_joined(self):
         course = Course.objects.get(pk=1)
