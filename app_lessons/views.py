@@ -7,6 +7,7 @@ from django.views import generic
 
 from .forms import JoinToCourse
 from .models import Lesson, Course, CoursesForUsers
+from app_users.services import mail_about_new_order
 
 
 # logger = logging.getLogger(__name__)
@@ -61,7 +62,8 @@ class CourseView(generic.DetailView):
                     CoursesForUsers.objects.create(course=course, user=user, is_active=True,
                                                    info='(самостоятельно на бесплатный курс)')
                 else:
-                    CoursesForUsers.objects.create(course=course, user=user, is_active=False)
+                    cfu = CoursesForUsers.objects.create(course=course, user=user, is_active=False)
+                    mail_about_new_order(cfu)
         return HttpResponseRedirect(reverse('course', kwargs=kwargs))
 
 
