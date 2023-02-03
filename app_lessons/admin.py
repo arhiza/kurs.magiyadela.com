@@ -55,9 +55,13 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(CoursesForUsers)
 class CoursesForUsersAdmin(admin.ModelAdmin):
-    list_display = ['user', 'course', 'is_active', 'info']
+    list_display = ['user', 'user_fio', 'course', 'is_active', 'info']
     ordering = ['is_active']
     list_filter = ['course']
+    
+    @admin.display(description='ФИО')
+    def user_fio(self, obj):
+        return obj.user.first_name
 
 
 @admin.register(FilePicture)
