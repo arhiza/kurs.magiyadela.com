@@ -31,10 +31,15 @@ def example_mail(to):
 
 
 def send_mail_from_site(subject, message, recipient_list, html_content=None, attach=None):
-    email = EmailMultiAlternatives(subject=subject, body=message,
-                                   from_email=settings.EMAIL_HOST_USER, to=recipient_list)
-    if html_content:
-        email.attach_alternative(html_content, "text/html")
-    if attach:
-        email.attach_file(attach)
-    email.send()
+    if settings.DEBUG:
+        print("Письмо не отправлено, ибо включен дебаг:")
+        print(subject, recipient_list)
+        print(message)
+    else:
+        email = EmailMultiAlternatives(subject=subject, body=message,
+                                       from_email=settings.EMAIL_HOST_USER, to=recipient_list)
+        if html_content:
+            email.attach_alternative(html_content, "text/html")
+        if attach:
+            email.attach_file(attach)
+        email.send()
