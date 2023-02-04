@@ -13,7 +13,7 @@
 <div id="wrapper"><ul id="head_menu">
 <li><a href="{% url 'all_courses' %}">На главную</a></li>
 {% if request.user.is_authenticated %}
-    <li>Вы вошли, как {{ request.user.username }}. <a href="{% url 'logout' %}">ВЫХОД</a></li>
+    <li>Вы вошли, как {{ request.user.username }}.</li><li><a href="{% url 'cabinet' %}">Личный кабинет</a></li><li><a href="{% url 'logout' %}">ВЫХОД</a></li>
     {% if request.user.is_staff %}<li><a href="{% url 'admin:index' %}">Админка</a></li>{% endif %}
 {% else %}
     <li><a href="{% url 'login' %}">Вход/Регистрация</a></li>

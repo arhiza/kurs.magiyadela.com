@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block page %}
+
+            <form method="post">
+              {% if form.errors %}
+                  {{ form.errors }}
+              {% endif %}
+              {% csrf_token %}
+              {{ form.as_p }}
+
+              <button class="btn btn_success" type="submit">Сохранить</button>
+
+              {% if is_ok %}
+              <div class="Profile-success">Профиль успешно сохранен
+              </div>{% endif %}
+
+            </form>
+
+{% endblock %}

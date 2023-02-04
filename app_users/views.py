@@ -7,9 +7,12 @@ from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.urls import reverse
+from django.views.generic import View
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 from kurs_project import settings
-from .forms import RestorePassword, LoginForm
+from .forms import RestorePassword, LoginForm, UserUpdateForm
 
 
 def restore_password(request):
@@ -42,6 +45,33 @@ def restore_password(request):
     return render(request, 'app_users/restore_password.html', context=context)
 
 
+class UserUpdateView(View):
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(UserUpdateView, self).dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        context = {"form": UserUpdateForm(instance=request.user)}
+        return render(request, "app_users/profile.html", context=context)
+
+    def post(self, request, *args, **kwargs):
+        form = UserUpdateForm(request.POST, instance=request.user)
+        is_ok = False
+        if form.is_valid():
+            form_data = form.data
+            user = request.user
+            user.email = form_data.get("email")
+            user.username = user.email
+            user.first_name = form_data.get("first_name")
+            password = form_data.get("password1")
+            if len(password) > 0:
+                user.set_password(password)
+            user.save()
+            is_ok = True
+        context = {"form": form, "is_ok": is_ok}
+        return render(request, "app_users/profile.html", context=context)
+
+
 def check_email_address_validity(email_address):
     try:
         validate_email(email_address)
@@ -52,6 +82,11 @@ def check_email_address_validity(email_address):
 
 
 def login_view(request):
+    next = request.GET.get("next", None)
+    if next:
+        redirect_to = next
+    else:
+        redirect_to = reverse('all_courses')
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -61,7 +96,7 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user:
                 login(request, user)
-                return redirect(reverse('all_courses'))
+                return redirect(redirect_to)
             # для регистрации - только логин в виде емейла
             if check_email_address_validity(username):
                 user, created = User.objects.get_or_create(username=username)
@@ -70,7 +105,7 @@ def login_view(request):
                     user.set_password(password)
                     user.save()
                     login(request, user)
-                    return redirect(reverse('all_courses'))
+                    return redirect(redirect_to)
                 else:
                     form.add_error('password', 'Пароль не подходит')
                     # TODO нужно показать ссылку для восстановления пароля
