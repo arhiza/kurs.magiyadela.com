@@ -53,11 +53,17 @@ class CourseAdmin(admin.ModelAdmin):
     view_link.allow_tags = True
 
 
+def approve_orders(modeladmin, request, queryset):
+    queryset.update(is_active=True)
+approve_orders.short_description = "Активировать выбранные курсы"
+
+
 @admin.register(CoursesForUsers)
 class CoursesForUsersAdmin(admin.ModelAdmin):
     list_display = ['user', 'user_fio', 'course', 'is_active', 'info']
     ordering = ['is_active']
     list_filter = ['course']
+    actions = [approve_orders]
     
     @admin.display(description='ФИО')
     def user_fio(self, obj):
