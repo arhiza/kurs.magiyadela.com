@@ -30,8 +30,16 @@ class CourseView(generic.DetailView):
             if not rel:
                 form = JoinToCourse(initial={'course_id': context.get('course').id})
                 context['form'] = form
-            if rel and rel.is_active:
-                can_see = True
+            else:
+                if rel.is_active:
+                    can_see = True
+                else:
+                    context['info_about_order'] = "Заявка на включение курса отправлена администратору. Скоро всё будет подключено. Но это не точно."
+        else:
+            #print("kwargs", kwargs)
+            #loginurl = reverse("login")
+            #context['info_about_order'] = f"Запись на курс доступна <a href={loginurl}>авторизованным</a> пользователям." # TODO??
+            context['info_about_order'] = "Запись на курс доступна авторизованным пользователям."
         if not can_see and (context.get('course').is_free or
                             (self.request.user.is_authenticated and
                              self.request.user.has_perm('app_lessons.view_lesson'))):
