@@ -36,10 +36,10 @@ class CourseView(generic.DetailView):
                 else:
                     context['info_about_order'] = "Заявка на включение курса отправлена администратору. Скоро всё будет подключено. Но это не точно."
         else:
-            #print("kwargs", kwargs)
-            #loginurl = reverse("login")
-            #context['info_about_order'] = f"Запись на курс доступна <a href={loginurl}>авторизованным</a> пользователям." # TODO??
-            context['info_about_order'] = "Запись на курс доступна авторизованным пользователям."
+            loginurl = reverse("login")
+            nexturl = context.get('course').get_absolute_url()
+            context['info_about_order'] = f"Запись на курс доступна <a href={loginurl}?next={nexturl}>авторизованным</a> пользователям."
+            #context['info_about_order'] = "Запись на курс доступна авторизованным пользователям."
         if not can_see and (context.get('course').is_free or
                             (self.request.user.is_authenticated and
                              self.request.user.has_perm('app_lessons.view_lesson'))):

@@ -29,7 +29,7 @@
         <button type="submit">Отправить заявку на курс</button>
         </form>
     {% else %}
-        <i>{{ info_about_order }}</i>
+        <i>{{ info_about_order|safe }}</i>
     {% endif %}
 
 <h2>Уроки курса</h2>
