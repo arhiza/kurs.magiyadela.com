@@ -60,8 +60,6 @@ class UserUpdateView(View):
         if form.is_valid():
             form_data = form.data
             user = request.user
-            user.email = form_data.get("email")
-            user.username = user.email
             user.first_name = form_data.get("first_name")
             password = form_data.get("password1")
             if len(password) > 0:

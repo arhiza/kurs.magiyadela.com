@@ -21,7 +21,6 @@ class LoginForm(forms.Form):
 class UserUpdateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        instance = kwargs.pop("instance", None)
         self.fields['password1'].required = False
         self.fields['password2'].required = False
 
@@ -34,9 +33,6 @@ class UserUpdateForm(forms.ModelForm):
         label="Пароль ещё раз",
         widget=forms.PasswordInput(attrs={"autocomplete": "new-password", 'placeholder': 'такой же'}),
         strip=False,
-    )
-    email = forms.CharField(
-        label="Е-мейл",
     )
     first_name = forms.CharField(
         label="ФИО",
@@ -53,4 +49,4 @@ class UserUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["email", "first_name"]
+        fields = ["first_name"]
