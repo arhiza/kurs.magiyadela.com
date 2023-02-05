@@ -16,7 +16,7 @@
     <li>Вы вошли, как {{ request.user.username }}.</li><li><a href="{% url 'cabinet' %}">Личный кабинет</a></li><li><a href="{% url 'logout' %}">ВЫХОД</a></li>
     {% if request.user.is_staff %}<li><a href="{% url 'admin:index' %}">Админка</a></li>{% endif %}
 {% else %}
-    <li><a href="{% url 'login' %}">Вход/Регистрация</a></li>
+    <li><a href="{% url 'login' %}">Вход</a> / <a href="{% url 'registration' %}">Регистрация</a></li>
 {% endif %}
 </ul>
 <hr>

@@ -4,12 +4,13 @@
 
 {% block page %}
 
-    <h1>Вход / Регистрация</h1>
+    <h1>Вход</h1>
 
     <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Войти</button>
     </form>
+    ** link to registraion page
 
 {% endblock %}

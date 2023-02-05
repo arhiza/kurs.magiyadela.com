@@ -7,6 +7,12 @@ class RestorePassword(forms.Form):
     email = forms.EmailField()
 
 
+class RegistrationForm(forms.Form):
+    login = forms.CharField(label="Е-мейл")
+    fio = forms.CharField(label="ФИО")
+    password = forms.CharField(widget=forms.PasswordInput, label="Придумайте пароль")
+
+
 class LoginForm(forms.Form):
     login = forms.CharField(label="Е-мейл")
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")

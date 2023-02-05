@@ -12,7 +12,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
 from kurs_project import settings
-from .forms import RestorePassword, LoginForm, UserUpdateForm
+from .forms import RestorePassword, LoginForm, RegistrationForm, UserUpdateForm
 
 
 def restore_password(request):
@@ -81,6 +81,35 @@ def check_email_address_validity(email_address):
     return valid_email
 
 
+def registration_view(request):
+    next = request.GET.get("next", None)
+    if next:
+        redirect_to = next
+    else:
+        redirect_to = reverse('all_courses')
+    if request.method == "POST":
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['login']
+            # для регистрации - только логин в виде емейла
+            if check_email_address_validity(username):
+                password = form.cleaned_data['password']
+                user, created = User.objects.get_or_create(username=username)
+                if created:  # пользователя с таким логином не было, теперь создался
+                    user.email = username
+                    user.first_name = form.cleaned_data['fio']
+                    user.set_password(password)
+                    user.save()
+                    login(request, user)
+                    return redirect(redirect_to)
+                else:
+                    form.add_error('login', 'Пользователь с таким емейлом уже существует')
+            else:
+                form.add_error('login', 'Некорректный адрес электронной почты')
+    else:
+        form = RegistrationForm()
+    return render(request, 'app_users/registration.html', {'form': form})
+
 def login_view(request):
     next = request.GET.get("next", None)
     if next:
@@ -97,20 +126,9 @@ def login_view(request):
             if user:
                 login(request, user)
                 return redirect(redirect_to)
-            # для регистрации - только логин в виде емейла
-            if check_email_address_validity(username):
-                user, created = User.objects.get_or_create(username=username)
-                if created:  # пользователя с таким логином не было, теперь создался
-                    user.email = username
-                    user.set_password(password)
-                    user.save()
-                    login(request, user)
-                    return redirect(redirect_to)
-                else:
-                    form.add_error('password', 'Пароль не подходит')
-                    # TODO нужно показать ссылку для восстановления пароля
             else:
-                form.add_error('login', 'Некорректный адрес электронной почты')
+                form.add_error('password', 'Пароль не подходит')
+                # TODO нужно показать ссылку для восстановления пароля
     else:
         form = LoginForm()
     return render(request, 'app_users/login.html', {'form': form})
