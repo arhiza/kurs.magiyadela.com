@@ -85,8 +85,10 @@ def registration_view(request):
     next = request.GET.get("next", None)
     if next:
         redirect_to = next
+        link_else = f"{reverse('login')}?next={next}"
     else:
         redirect_to = reverse('all_courses')
+        link_else = f"{reverse('login')}"
     if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -108,14 +110,16 @@ def registration_view(request):
                 form.add_error('login', 'Некорректный адрес электронной почты')
     else:
         form = RegistrationForm()
-    return render(request, 'app_users/registration.html', {'form': form})
+    return render(request, 'app_users/registration.html', {'form': form, 'link_else': link_else})
 
 def login_view(request):
     next = request.GET.get("next", None)
     if next:
         redirect_to = next
+        link_else = f"{reverse('registration')}?next={next}"
     else:
         redirect_to = reverse('all_courses')
+        link_else = f"{reverse('registration')}"
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -131,7 +135,7 @@ def login_view(request):
                 # TODO нужно показать ссылку для восстановления пароля
     else:
         form = LoginForm()
-    return render(request, 'app_users/login.html', {'form': form})
+    return render(request, 'app_users/login.html', {'form': form, 'link_else': link_else})
 
 
 class LogoutView(LogoutView):
