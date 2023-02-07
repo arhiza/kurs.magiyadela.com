@@ -65,9 +65,16 @@ class CoursesForUsersAdmin(admin.ModelAdmin):
     list_filter = ['course']
     actions = [approve_orders]
     
-    @admin.display(description='ФИО')
+    @admin.display(description='Кто это')
     def user_fio(self, obj):
-        return obj.user.first_name
+        res = []
+        if obj.user.first_name:
+            res.append(obj.user.first_name)
+        if hasattr(obj.user, 'profile'):
+            profile = obj.user.profile
+            if profile.name_hint:
+                res.append(profile.name_hint)
+        return " / ".join(res)
 
 
 @admin.register(FilePicture)
