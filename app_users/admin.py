@@ -11,5 +11,5 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ["user", "name_hint", "name_note", "is_verified"]
-    fields = ["user", "name_hint", "name_note"]
+    fields = ["name_hint", "name_note"]
     
