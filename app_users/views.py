@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 
 from kurs_project import settings
 from .forms import RestorePassword, LoginForm, RegistrationForm, UserUpdateForm
+from .models import Profile
 
 
 def restore_password(request):
@@ -70,6 +71,10 @@ class UserUpdateView(View):
         return render(request, "app_users/profile.html", context=context)
 
 
+def add_profile(user):
+    Profile.objects.create(user=user)
+
+
 def check_email_address_validity(email_address):
     try:
         validate_email(email_address)
@@ -100,6 +105,7 @@ def registration_view(request):
                     user.first_name = form.cleaned_data['fio']
                     user.set_password(password)
                     user.save()
+                    add_profile(user)
                     login(request, user)
                     return redirect(redirect_to)
                 else:

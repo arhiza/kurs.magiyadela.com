@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
+from .models import Profile
 
 
 class TestRegistration(TestCase):
@@ -25,6 +26,8 @@ class TestRegistration(TestCase):
         self.assertEqual(user.first_name, 'Тестовый юзер')
         # все успешно и редирект куда надо
         self.assertRedirects(response, '/', status_code=302, target_status_code=200)
+        profile = Profile.objects.get(user=user)
+        self.assertNotEqual(profile, None)
 
     def test_post_registration_not_correct(self):  # невалидная форма - логин не емейл
         response = self.client.post(reverse('registration'), {'login': 'test1',
