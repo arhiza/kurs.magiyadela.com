@@ -1,8 +1,9 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from .models import Profile
+from django.conf import settings
 
 
 class TestRegistration(TestCase):
@@ -15,19 +16,24 @@ class TestRegistration(TestCase):
         self.assertTemplateUsed(response, 'app_users/registration.html')
 
     def test_post_registration_correct(self):
-        response = self.client.post(reverse('registration'), {'login': 'test@email.ururu',
+        user_login = "test@email.ururu"
+        response = self.client.post(reverse('registration'), {'login': user_login,
                                                           'fio': 'Тестовый юзер',
                                                           'password': 'xdrthnjil'})
         count_after = User.objects.count()
         self.assertEqual(count_after, 1)  # в базе появился один пользователь
-        user = authenticate(username='test@email.ururu', password='xdrthnjil')
+        user = authenticate(username=user_login, password='xdrthnjil')
         self.assertNotEqual(user, None)  # залогиниться этим пользователем можно
-        self.assertEqual(user.email, 'test@email.ururu')  # email тоже прописался
+        self.assertEqual(user.email, user_login)  # email тоже прописался
         self.assertEqual(user.first_name, 'Тестовый юзер')
         # все успешно и редирект куда надо
         self.assertRedirects(response, '/', status_code=302, target_status_code=200)
         profile = Profile.objects.get(user=user)
         self.assertNotEqual(profile, None)
+        from django.core.mail import outbox
+        self.assertEqual(len(outbox), 1)
+        self.assertIn(user_login, outbox[0].to)
+        
 
     def test_post_registration_not_correct(self):  # невалидная форма - логин не емейл
         response = self.client.post(reverse('registration'), {'login': 'test1',

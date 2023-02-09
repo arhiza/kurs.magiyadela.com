@@ -22,6 +22,14 @@ def mail_about_new_order(cfu):
         print("Настройка для отправки почты не найдена", title, html_content)
 
 
+def mail_about_new_registration(user, password):
+    title = "Тема: Регистрация на ..."
+    htmly = get_template("emails/mail_about_registration.html")
+    d = {"usermail": user.username, "password": password, "link_confirm": "ссылка будет позже"}
+    html_content = htmly.render(d)
+    send_mail_from_site(title, html_content, [user.email], html_content)
+    
+
 def example_mail(to):
     username = to.split("@")[0]
     htmly = get_template("test_mail.html")
