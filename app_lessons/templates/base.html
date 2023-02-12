@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
+    <!--link href='{% static "/admin/css/base.css" %}' rel='stylesheet' type='text/css'-->
     <link href='{% static "/css/main.css" %}' rel='stylesheet' type='text/css'>
 
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -20,6 +21,18 @@
 {% endif %}
 </ul>
 <hr>
+<ul class="messagelist">
+    {% if message_ok %}
+    <li class="success">{{ message_ok }}</li>
+    {% endif %}
+    {% if message_error %}
+    <li class="error">{{ message_error }}</li>
+    {% endif %}
+    {% if message_warning %}
+    <li class="warning">{{ message_warning }}</li>
+    {% endif %}
+</ul>
+
 <div id="main">
 
 {% block page %}{% endblock %}

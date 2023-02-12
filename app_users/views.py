@@ -46,9 +46,19 @@ def restore_password(request):
     }
     return render(request, 'app_users/restore_password.html', context=context)
 
-def confirm(request, *args, **kwargs):
-    print(request.GET)
-    return HttpResponse("что-то должно делаться")
+def confirm(request):
+    email = request.GET.get("email", None)
+    confirm = request.GET.get("confirm", None)
+    if email and confirm:
+        user = User.objects.get(username=email)
+        if user.profile.verify_uid == confirm:
+            profile = user.profile
+            profile.is_verified = True
+            profile.verify_uid = ""
+            profile.save()
+            # request.session["message_ok"] = "Спасибо! Е-мейл подтвержден"  # TODO 
+            login(request, user)
+    return redirect(reverse('all_courses'))
 
 class UserUpdateView(View):
     @method_decorator(login_required)

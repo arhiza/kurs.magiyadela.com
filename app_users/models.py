@@ -9,12 +9,12 @@ class Profile(models.Model):
     name_note = models.CharField(max_length=200, verbose_name="Примечание", blank=True)
     
     is_verified = models.BooleanField(default=False, verbose_name="Емейл подтвержден")
-    verify_uid = models.CharField(max_length=200, verbose_name="код для ссылки подтверждения мыла")
+    verify_uid = models.CharField(max_length=70, verbose_name="код для ссылки подтверждения мыла")
     
     def _get_new_params_for_confirm(self):
         if self.user.username == self.user.email:
             chars=string.ascii_uppercase + string.ascii_lowercase + string.digits
-            self.verify_uid = "".join(secrets.choice(chars) for _ in range(180))
+            self.verify_uid = "".join(secrets.choice(chars) for _ in range(70))
             self.save()
             params = [f"email={self.user.email}", f"confirm={self.verify_uid}"]
             return "?"+"&".join(params)
