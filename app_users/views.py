@@ -46,6 +46,9 @@ def restore_password(request):
     }
     return render(request, 'app_users/restore_password.html', context=context)
 
+def confirm(request, *args, **kwargs):
+    print(request.GET)
+    return HttpResponse("что-то должно делаться")
 
 class UserUpdateView(View):
     @method_decorator(login_required)
@@ -72,9 +75,10 @@ class UserUpdateView(View):
         return render(request, "app_users/profile.html", context=context)
 
 
-def add_profile(user, password):
-    Profile.objects.create(user=user)
-    mail_about_new_registration(user, password)
+def add_profile(request, user, password):
+    profile = Profile.objects.create(user=user)
+    # profile.generate_new_confirm_code()
+    mail_about_new_registration(request, user, password)
 
 
 def check_email_address_validity(email_address):
@@ -107,7 +111,7 @@ def registration_view(request):
                     user.first_name = form.cleaned_data['fio']
                     user.set_password(password)
                     user.save()
-                    add_profile(user, password)
+                    add_profile(request, user, password)
                     login(request, user)
                     return redirect(redirect_to)
                 else:

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import secrets, string
 
 
 class Profile(models.Model):
@@ -9,6 +10,17 @@ class Profile(models.Model):
     
     is_verified = models.BooleanField(default=False, verbose_name="Емейл подтвержден")
     verify_uid = models.CharField(max_length=200, verbose_name="код для ссылки подтверждения мыла")
+    
+    def _get_new_params_for_confirm(self):
+        if self.user.username == self.user.email:
+            chars=string.ascii_uppercase + string.ascii_lowercase + string.digits
+            self.verify_uid = "".join(secrets.choice(chars) for _ in range(180))
+            self.save()
+            params = [f"email={self.user.email}", f"confirm={self.verify_uid}"]
+            return "?"+"&".join(params)
+        else:
+            return ""
+    get_new_params_for_confirm = property(_get_new_params_for_confirm)
     
     def __str__(self):
         return self.user.username

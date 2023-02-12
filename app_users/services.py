@@ -1,6 +1,8 @@
 from django.conf import settings
+from django.test import override_settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
+from django.urls import reverse
 
 from app_lessons.models import CoursesForUsers
 from app_users.models import SiteSettings
@@ -22,10 +24,12 @@ def mail_about_new_order(cfu):
         print("Настройка для отправки почты не найдена", title, html_content)
 
 
-def mail_about_new_registration(user, password):
-    title = "Тема: Регистрация на ..."
+def mail_about_new_registration(request, user, password):
+    title = "Регистрация на Курсах от Магии дела"
     htmly = get_template("emails/mail_about_registration.html")
-    d = {"usermail": user.username, "password": password, "link_confirm": "ссылка будет позже"}
+    params = user.profile.get_new_params_for_confirm
+    link_confirm = request.build_absolute_uri(reverse('confirm')) + params
+    d = {"usermail": user.username, "password": password, "link_confirm": link_confirm}
     html_content = htmly.render(d)
     send_mail_from_site(title, html_content, [user.email], html_content)
     
@@ -38,6 +42,7 @@ def example_mail(to):
     send_mail_from_site("Проверка связи", "Если это сообщение видно, значит, с тегами ничего не получилось.", [to], html_content)
 
 
+# @override_settings(DEBUG=False)
 def send_mail_from_site(subject, message, recipient_list, html_content=None, attach=None):
     if settings.DEBUG:
         print("Письмо не отправлено, ибо включен дебаг:")
