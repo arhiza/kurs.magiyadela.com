@@ -7,7 +7,7 @@ from django.views import generic
 
 from .forms import JoinToCourse
 from .models import Lesson, Course, CoursesForUsers
-from app_users.services import mail_about_new_order
+from app_emails.services import mail_about_new_order
 
 
 # logger = logging.getLogger(__name__)

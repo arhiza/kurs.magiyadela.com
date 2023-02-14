@@ -14,7 +14,7 @@ def mail_about_new_order(cfu):
         usermail = cfu.user.username
     coursename = cfu.course.name
     title = f"ЗАЯВКА НА КУРС {coursename.upper()}"
-    htmly = get_template("emails/mail_about_new_order.html")
+    htmly = get_template("app_emails/mail_about_new_order.html")
     d = {"usermail": usermail, "coursename": coursename}
     html_content = htmly.render(d)
     to = SiteSettings.objects.filter(key="order_mail").first()
@@ -26,7 +26,7 @@ def mail_about_new_order(cfu):
 
 def mail_about_new_registration(request, user, password):
     title = "Регистрация на Курсах от Магии дела"
-    htmly = get_template("emails/mail_about_registration.html")
+    htmly = get_template("app_emails/mail_about_registration.html")
     params = user.profile.get_new_params_for_confirm
     link_confirm = request.build_absolute_uri(reverse('confirm')) + params
     d = {"usermail": user.username, "password": password, "link_confirm": link_confirm}
@@ -36,7 +36,7 @@ def mail_about_new_registration(request, user, password):
 
 def example_mail(to):
     username = to.split("@")[0]
-    htmly = get_template("test_mail.html")
+    htmly = get_template("app_emails/test_mail.html")
     d = {'username': username}
     html_content = htmly.render(d)
     send_mail_from_site("Проверка связи", "Если это сообщение видно, значит, с тегами ничего не получилось.", [to], html_content)
@@ -48,6 +48,7 @@ def send_mail_from_site(subject, message, recipient_list, html_content=None, att
         print("Письмо не отправлено, ибо включен дебаг:")
         print(subject, recipient_list)
         print(message)
+        print(html_content)
     else:
         email = EmailMultiAlternatives(subject=subject, body=message,
                                        from_email=settings.EMAIL_HOST_USER, to=recipient_list)

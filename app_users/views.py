@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 from kurs_project import settings
 from .forms import RestorePassword, LoginForm, RegistrationForm, UserUpdateForm
 from .models import Profile
-from .services import mail_about_new_registration
+from app_emails.services import mail_about_new_registration
 
 
 def restore_password(request):
