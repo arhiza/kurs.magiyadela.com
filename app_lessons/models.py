@@ -117,6 +117,16 @@ class CoursesForUsers(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="пользователь", related_name="to_courses")
     is_active = models.BooleanField(default=False, verbose_name="курс подключен")
     info = models.CharField(max_length=200, blank=True, null=True, verbose_name="примечание")
+    
+    def to_mail(self):
+        if self.is_active and hasattr(self.user, "profile"):
+            if self.user.profile.is_verified:
+                from app_emails.services import mail_about_approved_order
+                mail_about_approved_order(self)
+
+    def save(self, *args, **kwargs):
+        super(CoursesForUsers, self).save(*args, **kwargs)
+        self.to_mail()
 
     class Meta:
         verbose_name_plural = "Подключенные курсы"

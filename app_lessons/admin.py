@@ -54,7 +54,9 @@ class CourseAdmin(admin.ModelAdmin):
 
 
 def approve_orders(modeladmin, request, queryset):
-    queryset.update(is_active=True)
+    for cfu in queryset:
+        cfu.is_active = True
+        cfu.save()
 approve_orders.short_description = "Активировать выбранные курсы"
 
 

@@ -32,7 +32,17 @@ def mail_about_new_registration(request, user, password):
     d = {"usermail": user.username, "password": password, "link_confirm": link_confirm}
     html_content = htmly.render(d)
     send_mail_from_site(title, html_content, [user.email], html_content)
-    
+
+
+def mail_about_approved_order(cfu):
+    course_name = cfu.course.name
+    title = f"Открыт доступ к материалам курса {course_name}"
+    htmly = get_template("app_emails/mail_about_approved_order.html")
+    link = "https://kurs.magiyadela.com" + cfu.course.get_absolute_url()
+    d = {"fio": cfu.user.first_name, "course_name": course_name, "link": link}
+    html_content = htmly.render(d)
+    send_mail_from_site(title, html_content, [cfu.user.email], html_content)
+
 
 def example_mail(to):
     username = to.split("@")[0]
@@ -50,10 +60,16 @@ def send_mail_from_site(subject, message, recipient_list, html_content=None, att
         print(message)
         print(html_content)
     else:
-        email = EmailMultiAlternatives(subject=subject, body=message,
-                                       from_email=settings.EMAIL_HOST_USER, to=recipient_list)
-        if html_content:
-            email.attach_alternative(html_content, "text/html")
-        if attach:
-            email.attach_file(attach)
-        email.send()
+        try:
+            email = EmailMultiAlternatives(subject=subject, body=message,
+                                           from_email=settings.EMAIL_HOST_USER, to=recipient_list)
+            if html_content:
+                email.attach_alternative(html_content, "text/html")
+            if attach:
+                email.attach_file(attach)
+            email.send()
+        except:
+            print("Письмо не отправлено - ЧТО-ТО ПОШЛО НЕ ТАК:")
+            print(subject, recipient_list)
+            print(message)
+            print(html_content)
