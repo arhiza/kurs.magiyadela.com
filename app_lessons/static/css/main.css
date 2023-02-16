@@ -4,12 +4,12 @@ body {
 
 #wrapper {
   background: url(../images/wrap.jpg);
-  padding: 10px;
 }
 
-#main {
-  margin: 0px 5%;
-  padding: 30px 0px;
+#main{
+	width:1000px;
+	margin:0px auto;
+	padding:30px 0px;
 }
 
 .article {
@@ -178,4 +178,252 @@ textarea {
 	width: 98%;
 }
 
+
+#header{
+	height:90px;
+	background:url(/static/images/menu.png) top repeat-x
+}
+
+.top{
+	height:90px;
+	width:1000px;
+	margin:0px auto;
+}
+
+.logo{
+	float:left;
+	background:#E10404;
+	height:90px;
+	width:170px;
+	padding:0px 10px 0px 5px;
+	text-align:center;
+	font-family:Bitter,sans sans-serif;
+}
+
+.logo h1{
+	margin:0px;
+	padding:0px;
+	font-weight:800;
+	font-size:30px;
+	line-height:90px;
+}
+
+.logo h1 a:link, .logo h1 a:visited{
+	color:#fff;
+	text-decoration:none;
+}
+
+/* TOP-MENU */
+	
+#botmenu{
+
+	padding:0px 0px 0px 30px;
+	font-size: 12px;
+	overflow:hidden;
+	width:720px;
+	}
+	
+#submenu {
+	margin: 0px 0px;
+	padding:0px 0px;
+	height:50px;
+	}
+	
+#submenu ul {
+	width: auto;
+	float: left;
+	list-style: none;
+	margin: 0;
+	padding: 0 0px;
+	}
+	
+#submenu li {
+	float: left;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	color: #fff;
+	font-weight:bold;
+	text-transform:uppercase;
+	}
+	
+#submenu li a {
+	color: #fff;
+	display: block;
+    margin: 0;
+	padding: 15px 10px 16px 10px;
+	text-decoration: none;
+	position: relative;
+	}
+
+#submenu li a:hover, #submenu li a:active, #submenu .current_page_item a  {
+	color: #fff;
+
+	}
+	
+#submenu li a.sf-with-ul {
+	padding-right: 10px;
+	}	
+	
+
+	
+#submenu li li a, #submenu li li a:link, #submenu li li a:visited {
+	color: #eee;
+	font-size:12px;
+	width: 148px; 
+	margin: 0;
+	padding: 10px 10px;
+	border-bottom:1px solid #666;
+	border-top:1px solid #888;
+	border-left:1px solid #888;
+	border-right:1px solid #666;
+	position: relative;
+	background:#7D7D7D;
+	font-weight:normal;
+	}
+	
+#submenu ul ul li:first-child{
+	border-top:none;
+
+}
+
+#submenu ul ul li:last-child{
+	border-bottom:none;
+
+}	
+	
+#submenu li li:last-child{
+	border-bottom:none;
+}
+		
+#submenu li li a:hover, #submenu li li a:active {
+	background:#666;
+	color: #fff; 
+	}
+
+
+#submenu li ul {
+	z-index: 9999;
+	position: absolute;
+	left: -999em;
+	height: auto;
+	width: 170px;
+	margin: 0px 0px;
+	padding: 0px;
+	background:#282828;
+
+	}
+
+#submenu li ul a { 
+	width: 150px;
+	}
+
+#submenu li ul a:hover, #submenu li ul a:active { 
+	}
+
+#submenu li ul ul {
+	margin: -42px 0 0 169px;
+	}
+
+#submenu li:hover ul ul, #submenu li:hover ul ul ul, #submenu li.sfHover ul ul, #submenu li.sfHover ul ul ul {
+	left: -999em;
+	}
+
+#submenu li:hover ul, #submenu li li:hover ul, #submenu li li li:hover ul, #submenu li.sfHover ul, #submenu li li.sfHover ul, #submenu li li li.sfHover ul {
+	left: auto;
+	}
+
+#submenu li:hover, #submenu li.sfHover { 
+	position: static;
+	}
+
+
+.clear{
+	clear:both;
+}
+
+#content {
+	float:left;
+	width:670px;
+	padding-bottom:20px;
+	
+}
+
+#sidebar{
+	width:270px;
+	float:right;
+	padding-bottom:20px;
+}
+
+#sidebar ul{
+	margin:0px;
+	padding:0px;
+}
+
+h3.sidetitl {
+    font-size: 14px;
+    margin-bottom: 10px;
+    padding-bottom:10px;
+	text-transform:uppercase;
+   color:#444;
+   border-bottom: 1px solid #ddd;
+}
+
+.sidebox {
+    list-style: none;
+    margin: 0px 0px 25px 0px;
+}
+
+.sidebox ul {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.sidebox li {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.sidebox ul ul {
+    list-style-type: none;
+    background-repeat: no-repeat;
+    margin: 0px;
+    padding: 0px;
+}
+
+.sidebox ul li {
+    list-style-type: none;
+    margin: 0px;
+    margin: 0px 0px;
+}
+
+.sidebox ul li a:link,.sidebox ul li a:visited {
+    color: #666;
+    text-decoration: none;
+}
+
+.sidebox ul li a:hover{
+	color:#000;
+}
+
+.sidebox.widget_categories ul li,.sidebox.widget_pages ul li,.sidebox.widget_archive ul li,.sidebox.widget_links ul li,.sidebox.widget_meta ul li {
+    border-bottom: 1px solid #fff;
+   padding: 7px 0px;
+}
+
+.sidebox.widget_recent_entries ul li  {
+	padding: 7px 0px;
+    border-bottom: 1px solid #fff;
+}
+
+ul#recentcomments li.recentcomments {
+    border-bottom: 1px solid #fff;
+    padding: 5px 0;
+}
+
+.sidebox .textwidget p {
+    padding: 0px 10px;
+}
 
