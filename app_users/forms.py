@@ -8,13 +8,21 @@ class RestorePassword(forms.Form):
 
 
 class RegistrationForm(forms.Form):
-    login = forms.CharField(label="Е-мейл")
-    fio = forms.CharField(label="ФИО")
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ""
+
+    login = forms.CharField(label="E-mail*")
+    fio = forms.CharField(label="Имя*")
     password = forms.CharField(widget=forms.PasswordInput, label="Придумайте пароль")
 
 
 class LoginForm(forms.Form):
-    login = forms.CharField(label="Е-мейл")
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ""
+
+    login = forms.CharField(label="E-mail")
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
 
 
@@ -23,9 +31,10 @@ class UserUpdateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['password1'].required = False
         self.fields['password2'].required = False
+        self.label_suffix = ""
 
     password1 = forms.CharField(
-        label='Пароль',
+        label="Пароль",
         strip=False,
         widget=forms.PasswordInput(attrs={'autocomplete': 'new-password', 'placeholder': 'тут можно поменять пароль'}),
     )
@@ -35,7 +44,7 @@ class UserUpdateForm(forms.ModelForm):
         strip=False,
     )
     first_name = forms.CharField(
-        label="ФИО",
+        label="Имя",
     )
 
     def clean(self):

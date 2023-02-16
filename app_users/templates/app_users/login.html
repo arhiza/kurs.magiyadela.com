@@ -6,9 +6,23 @@
 
     <h1>Вход</h1>
 
+    {% if form.errors %}
+    <ul class="messagelist">
+     {% for field in form %}
+        {% for error in field.errors %}
+            <li class="error">{{ error }}</li>
+        {% endfor %}
+     {% endfor %}
+    </ul>
+    {% endif %}
+
     <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {% for field in form %}
+        <p>
+            {{ field.label_tag }}<br>{{ field }}
+        </p>
+    {% endfor %}
     <button type="submit">Войти</button>
     </form>
     или <a href={{ link_else }}>зарегистрироваться</a>
