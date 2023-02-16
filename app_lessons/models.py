@@ -115,7 +115,7 @@ class Lesson(models.Model):
 class CoursesForUsers(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE, verbose_name="курс", related_name="to_users")
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="пользователь", related_name="to_courses")
-    is_active = models.BooleanField(default=False, verbose_name="курс подключен")
+    is_active = models.BooleanField(default=False, verbose_name="On|Off")
     info = models.CharField(max_length=200, blank=True, null=True, verbose_name="примечание")
     
     def to_mail(self):

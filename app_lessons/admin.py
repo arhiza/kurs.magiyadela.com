@@ -62,17 +62,21 @@ approve_orders.short_description = "Активировать выбранные 
 
 @admin.register(CoursesForUsers)
 class CoursesForUsersAdmin(admin.ModelAdmin):
-    list_display = ['user', 'user_fio', 'course', 'is_active', 'info']
-    ordering = ['is_active']
-    list_filter = ['course']
+    list_display = ["user", "user_fio", "short_course_name", "is_active", "info"]
+    ordering = ["is_active"]
+    list_filter = ["course"]
     actions = [approve_orders]
     
-    @admin.display(description='Кто это')
+    @admin.display(description="Курс")
+    def short_course_name(self, obj):
+        return f"{obj.course.name[:15]}..."
+    
+    @admin.display(description="Кто это")
     def user_fio(self, obj):
         res = []
         if obj.user.first_name:
             res.append(obj.user.first_name)
-        if hasattr(obj.user, 'profile'):
+        if hasattr(obj.user, "profile"):
             profile = obj.user.profile
             if profile.name_hint:
                 res.append(profile.name_hint)
