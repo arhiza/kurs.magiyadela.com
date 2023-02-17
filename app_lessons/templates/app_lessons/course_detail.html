@@ -13,15 +13,19 @@
     <img class="article-image" src="{{ course.picture.file.url }}">
     {% endif %}
 <div class="article">{{ course.about|safe }}</div>
-<h4>Цена</h4><p>
+{% if course.price %}
+    <h4>Цена</h4>
+    <p>{{ course.price }}</p>
+{% else %}
     {% if course.is_free %}
-        бесплатно
-    {% else %}
-{{ course.price }}
-    {% endif %}</p>
+    <h4>Цена</h4>
+    <p>бесплатно</p>
+    {% endif %}
+{% endif %}
 {% if course.link %}
 <p><a href="{{ course.link }}">Купить тут</a></p>
 {% endif %}
+<p>
     {% if form %}
         <form method="post">
         {% csrf_token %}
@@ -31,7 +35,7 @@
     {% else %}
         <i>{{ info_about_order|safe }}</i>
     {% endif %}
-
+</p>
 <h2>Уроки курса</h2>
 <ul>
 {% for lesson in course.lessons.all %}
