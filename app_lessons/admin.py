@@ -1,7 +1,12 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from .models import Lesson, Course, Category, CoursesForUsers, FilePicture
+from .models import Lesson, Course, Category, CoursesForUsers, FilePicture, Comment
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['lesson', 'user', 'text_question', 'text_answer', 'created_at', 'modified_at']
 
 
 @admin.register(Category)

@@ -171,3 +171,18 @@ class FilePicture(models.Model):
     class Meta:
         verbose_name_plural = 'Картинки'
         verbose_name = 'Картинка'
+
+
+class Comment(models.Model):
+    lesson = models.ForeignKey('Lesson', on_delete=models.CASCADE,
+                               related_name="comments", verbose_name="урок")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="пользователь", related_name="user_comments")
+    text_question = models.TextField(verbose_name="вопрос")
+    text_answer = models.TextField(verbose_name="ответ")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='created at')
+    modified_at = models.DateTimeField(auto_now=True, verbose_name='modified_at')
+
+    class Meta:
+        verbose_name_plural = 'Комментарии'
+        verbose_name = 'Комментарий'
+
