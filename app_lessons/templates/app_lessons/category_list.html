@@ -4,14 +4,13 @@
 
 {% block page %}
 
-{% if courses|length == 0 %}
+{% if categories|length == 0 %}
    Ничего нет. Попробуйте зайти сюда когда-нибудь потом.
 {% else %}
-    {% regroup courses by category as categories_list %}
-    {% for category in categories_list %}
-        <h2>{{ category.grouper }}</h2>
+    {% for category in categories %}
+        <h2>{{ category.name }}</h2>
         <ul>
-        {% for course in category.list %}
+        {% for course in category.courses.all %}
             {% if course.url %}
         <li{% if course.is_free %} class="free"{% endif %}><a href="{{ course.get_absolute_url }}">{{ course.name }}</a></li>
             {% endif %}

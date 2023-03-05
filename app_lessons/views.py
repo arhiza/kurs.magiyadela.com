@@ -1,12 +1,13 @@
 import logging
 
+from django.db.models import Prefetch
 from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import generic
 
 from .forms import JoinToCourse
-from .models import Lesson, Course, CoursesForUsers
+from .models import Lesson, Course, CoursesForUsers, Category
 from app_emails.services import mail_about_new_order
 
 
@@ -111,11 +112,11 @@ class LessonView(generic.DetailView):
 
 class CourseListView(generic.ListView):
     model = Course
-    context_object_name = 'courses'
+    context_object_name = 'categories'
 
     def get_queryset(self):
-        return Course.objects.filter(status=Course.OK).select_related('category').\
-            order_by('category__id').all()
+        ok_courses = Course.objects.filter(status=Course.OK)
+        return Category.objects.prefetch_related(Prefetch('courses', queryset=ok_courses))
 
 
 def page_not_found_view(request, exception):

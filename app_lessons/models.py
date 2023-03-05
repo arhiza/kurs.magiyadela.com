@@ -11,11 +11,13 @@ from django.urls import reverse
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
+    ordering = models.PositiveIntegerField(default=0, verbose_name="Сортировка")
 
     def __str__(self):
         return self.name
 
     class Meta:
+        ordering = ['ordering']
         verbose_name_plural = 'Категории'
         verbose_name = 'Категория'
 
@@ -40,8 +42,9 @@ class Course(models.Model):
                                 blank=True, on_delete=models.SET_NULL, verbose_name="Файл с иллюстрацией")
     about = models.TextField(verbose_name="Описание")
     is_free = models.BooleanField(default=False, verbose_name="Курс бесплатный")
-    price = models.CharField(blank=True, null=True, max_length=20, verbose_name="Цена, с пометкой, в какой валюте")
+    price = models.CharField(blank=True, null=True, max_length=20, verbose_name="Цена")
     link = models.URLField(blank=True, null=True, max_length=200, verbose_name="Ссылка на магазин, где купить")
+    ordering = models.PositiveIntegerField(default=0, verbose_name="Сортировка")
 
     def __str__(self):
         return self.name
@@ -49,7 +52,17 @@ class Course(models.Model):
     def get_absolute_url(self):
         return reverse('course', args=[self.url])
 
+    def save(self, *args, **kwargs):
+        if self.ordering == 0:
+            max_ordering = self.category.courses.all().aggregate(Max('ordering'))['ordering__max']
+            if max_ordering:
+                self.ordering = max_ordering + 10
+            else:
+                self.ordering = 10
+        super(Course, self).save(*args, **kwargs)
+
     class Meta:
+        ordering = ['ordering']
         verbose_name_plural = 'Курсы'
         verbose_name = 'Курс'
 

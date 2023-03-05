@@ -11,7 +11,7 @@ class CommentAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'count_of_courses']
+    list_display = ['name', 'count_of_courses', 'ordering']
 
     def count_of_courses(self, obj):
         return obj.courses.count()
@@ -44,7 +44,7 @@ class LessonInLine(admin.TabularInline):
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     prepopulated_fields = {"url": ("name",)}
-    list_display = ['name', 'status', 'category', 'price', 'is_free', 'view_link']
+    list_display = ['name', 'status', 'category', 'price', 'is_free', 'ordering', 'view_link']
     list_filter = ['category', 'status']
     inlines = [LessonInLine]
 
