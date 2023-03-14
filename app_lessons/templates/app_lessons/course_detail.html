@@ -14,13 +14,10 @@
     {% endif %}
 <div class="article">{{ course.about|safe }}</div>
 {% if course.price %}
+    {% if not course.is_free %}
     <h4>Цена</h4>
-    <p>{{ course.price }}</p>
-{% else %}
-    {% if course.is_free %}
-    <h4>Цена</h4>
-    <p>бесплатно</p>
     {% endif %}
+    <p><i>{{ course.price }}</i></p>
 {% endif %}
 {% if course.link %}
 <p><a href="{{ course.link }}">Купить тут</a></p>
