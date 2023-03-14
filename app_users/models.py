@@ -33,6 +33,7 @@ class Profile(models.Model):
 class SiteSettings(models.Model):
     key = models.CharField(max_length=10, verbose_name="Название параметра", unique=True)
     value = models.CharField(max_length=100, verbose_name="Значение параметра")
+    text_value = models.TextField(blank=True, null=True, verbose_name="Текст")
 
     class Meta:
         verbose_name_plural = 'Настройки сайта'

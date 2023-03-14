@@ -42,7 +42,7 @@ class Course(models.Model):
                                 blank=True, on_delete=models.SET_NULL, verbose_name="Файл с иллюстрацией")
     about = models.TextField(verbose_name="Описание")
     is_free = models.BooleanField(default=False, verbose_name="Курс бесплатный")
-    price = models.CharField(blank=True, null=True, max_length=20, verbose_name="Цена")
+    price = models.CharField(blank=True, null=True, max_length=200, verbose_name="Цена")
     link = models.URLField(blank=True, null=True, max_length=200, verbose_name="Ссылка на магазин, где купить")
     ordering = models.PositiveIntegerField(default=0, verbose_name="Сортировка")
 
