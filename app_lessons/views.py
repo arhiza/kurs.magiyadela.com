@@ -9,6 +9,7 @@ from django.views import generic
 from .forms import JoinToCourse
 from .models import Lesson, Course, CoursesForUsers, Category
 from app_emails.services import mail_about_new_order
+from app_users.models import SiteSettings
 
 
 # logger = logging.getLogger(__name__)
@@ -118,6 +119,13 @@ class CourseListView(generic.ListView):
         ok_courses = Course.objects.filter(status=Course.OK)
         return Category.objects.prefetch_related(Prefetch('courses', queryset=ok_courses))
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #...
+        main_page_text = SiteSettings.objects.filter(key="main_page").first()
+        if main_page_text:
+            context['main_page_text'] = main_page_text.text_value
+        return context
 
 def page_not_found_view(request, exception):
     return render(request, '404.html', status=404)
