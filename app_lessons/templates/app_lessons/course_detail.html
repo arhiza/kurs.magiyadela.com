@@ -33,6 +33,7 @@
         <i>{{ info_about_order|safe }}</i>
     {% endif %}
 </p>
+{% if course.lessons.all|length > 0 %}
 <h2>Уроки курса</h2>
 <ul>
 {% for lesson in course.lessons.all %}
@@ -49,5 +50,6 @@
     {% endif %}
 {% endfor %}
 </ul>
+{% endif %}
 
 {% endblock %}
