@@ -81,6 +81,10 @@ class Lesson(models.Model):
     video = models.URLField(blank=True, null=True, verbose_name="Видео на ютубе, если есть")
     questions = models.TextField(blank=True, null=True, verbose_name="Вопросы для домашней работы")
     ordering = models.PositiveIntegerField(default=0, verbose_name="Порядок уроков в курсе")
+    
+    @property
+    def published_comments(self):
+        return self.comments.filter(is_published=True)
 
     def _code_video(self):
         # из ссылки типа такой https://www.youtube.com/watch?v=8HDXSmDJ6Kw&list=LL

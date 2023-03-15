@@ -41,4 +41,22 @@
     <br><br>(и еще должна быть форма, куда можно задать вопрос по уроку)
 {% endif %}
 
+{% for comm in lesson.published_comments.all %}
+<div class="block_comment">
+{% if comm.user.first_name %}
+    {{ comm.user.first_name }}:
+{% else %}
+    {% if comm.text_question %}
+    Анонимно:
+    {% endif %}
+{% endif %}
+{% if comm.text_question %}
+<div class="article question">{{ comm.text_question }}</div>
+{% endif %}
+{% if comm.text_answer %}
+<div class="article answer">{{ comm.text_answer|safe }}</div>
+{% endif %}
+<hr></div>
+{% endfor %}
+
 {% endblock %}
