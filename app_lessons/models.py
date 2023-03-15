@@ -7,6 +7,7 @@ from django.db.models import Max
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
+from django.core.exceptions import ValidationError
 
 
 class Category(models.Model):
@@ -189,11 +190,20 @@ class FilePicture(models.Model):
 class Comment(models.Model):
     lesson = models.ForeignKey('Lesson', on_delete=models.CASCADE,
                                related_name="comments", verbose_name="урок")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="пользователь", related_name="user_comments")
-    text_question = models.TextField(verbose_name="вопрос")
-    text_answer = models.TextField(verbose_name="ответ")
+    is_published = models.BooleanField(default=False, verbose_name="опубликовано")
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="пользователь", related_name="user_comments")
+    text_question = models.TextField(verbose_name="вопрос", blank=True, null=True)
+    text_answer = models.TextField(verbose_name="ответ", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='created at')
     modified_at = models.DateTimeField(auto_now=True, verbose_name='modified_at')
+
+    def clean(self):
+        if not self.text_question and not self.text_answer:
+            raise ValidationError('Нужно заполнить вопрос или ответ')
+            
+    def save(self, *args, **kwargs):
+        super(Comment, self).save(*args, **kwargs)
+        # TODO если запись новая, и добавлена кем-то из пользователей (не из админки), то отправить емейл администратору
 
     class Meta:
         verbose_name_plural = 'Комментарии'
