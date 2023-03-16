@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавить комментарий{% endblock %}
+
+{% block page %}
+
+<i><a href="{{ lesson.course.get_absolute_url }}">{{ lesson.course }}</a> > <a href="{{ lesson.get_absolute_url }}">{{ lesson }}</a></i>
+<h1>Добавить комментарий к уроку "{{ lesson }}"</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+        <p>
+            {{ field.label_tag }}<br>{{ field }}
+        </p>
+    {% endfor %}
+    <button type="submit">Отправить</button>
+</form>
+* Вы получите уведомление на e-mail, когда комментарий будет опубликован
+
+
+{% endblock %}

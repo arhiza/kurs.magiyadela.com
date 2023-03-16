@@ -34,7 +34,6 @@
         <p><a href="{{ lesson.next_lesson.get_absolute_url }}">Следующий урок</a></p>
     {% endif %}
 
-{% endif %}
 
 {% if course_paid__todo %}
     <br><br>(тут должна быть кнопочка "пометить урок пройденным")
@@ -58,5 +57,7 @@
 {% endif %}
 <hr></div>
 {% endfor %}
+
+{% endif %}
 
 {% endblock %}

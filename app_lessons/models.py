@@ -112,6 +112,9 @@ class Lesson(models.Model):
     def get_absolute_url(self):
         return reverse('lesson', args=[self.url])
 
+    def get_add_comment_url(self):
+        return reverse('comment', args=[self.url])
+
     def __str__(self):
         return self.name
 

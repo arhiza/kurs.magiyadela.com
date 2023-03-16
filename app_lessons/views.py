@@ -5,10 +5,13 @@ from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import generic
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
-from .forms import JoinToCourse
-from .models import Lesson, Course, CoursesForUsers, Category
-from app_emails.services import mail_about_new_order
+from .forms import JoinToCourse, AddCommentForm
+from .models import Lesson, Course, CoursesForUsers, Category, Comment
+from app_emails.services import mail_about_new_order, mail_about_new_comment
 from app_users.models import SiteSettings
 
 
@@ -109,6 +112,30 @@ class LessonView(generic.DetailView):
             if not request.user.is_authenticated or not request.user.has_perm('app_lessons.view_lesson'):
                 return HttpResponseNotFound()
         return res
+
+
+class AddCommentView(generic.View):
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(AddCommentView, self).dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        lesson = Lesson.objects.get(url=kwargs.get("slug"))
+        context = {"lesson": lesson, "form": AddCommentForm()}
+        return render(request, "app_lessons/add_comment.html", context=context)
+
+    def post(self, request, *args, **kwargs):
+        lesson = Lesson.objects.get(url=kwargs.get("slug"))
+        form = AddCommentForm(request.POST)
+        if form.is_valid():
+            text_question = form.data.get("text")
+            user = request.user
+            comm = Comment.objects.create(lesson=lesson, user=user, text_question=text_question)
+            mail_about_new_comment(request, comm)
+            messages.success(request, "Комментарий отправлен")
+            return HttpResponseRedirect(reverse('lesson', kwargs=kwargs))
+        context = {"lesson": lesson, "form": form}
+        return render(request, "app_lessons/add_comment.html", context=context)
 
 
 class CourseListView(generic.ListView):

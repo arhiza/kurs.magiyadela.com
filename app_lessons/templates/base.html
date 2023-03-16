@@ -44,18 +44,13 @@
         </div>
     </div>
 
-
-<ul class="messagelist">
-    {% if message_ok %}
-    <li class="success">{{ message_ok }}</li>
+    {% if messages %}
+    <ul class="messagelist">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
     {% endif %}
-    {% if message_error %}
-    <li class="error">{{ message_error }}</li>
-    {% endif %}
-    {% if message_warning %}
-    <li class="warning">{{ message_warning }}</li>
-    {% endif %}
-</ul>
 
 <div id="main">
 <div id="content">

@@ -8,6 +8,23 @@ from app_lessons.models import CoursesForUsers
 from app_users.models import SiteSettings
 
 
+def mail_about_new_comment(request, comm):
+    txt = comm.text_question
+    lesson = comm.lesson
+    title = f"Новый ВОПРОС к уроку {lesson.name.upper()}"
+    htmly = get_template("app_emails/mail_about_new_comment.html")
+    d = {"txt": txt, "lesson_url": request.build_absolute_uri(lesson.get_absolute_url()), 
+         "lesson": lesson, "admin_url": request.build_absolute_uri(reverse("admin:app_lessons_comment_change", args=[comm.pk]))}  # {% url 'admin:polls_choice_change' choice.id %}
+
+
+    html_content = htmly.render(d)
+    to = SiteSettings.objects.filter(key="order_mail").first()  # TODO comment_mail ?
+    if to:
+        send_mail_from_site(title, html_content, [to.value], html_content)
+    else:
+        print("Настройка для отправки почты не найдена", title, html_content)
+
+
 def mail_about_new_order(cfu):
     usermail = cfu.user.email
     if not usermail:
