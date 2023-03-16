@@ -210,7 +210,7 @@ class Comment(models.Model):
             
     def save(self, *args, **kwargs):
         super(Comment, self).save(*args, **kwargs)
-        # TODO если запись новая, и добавлена кем-то из пользователей (не из админки), то отправить емейл администратору
+        # TODO при публикации комментария админом отправить уведомления заинтересованным лицам
 
     class Meta:
         verbose_name_plural = 'Комментарии'

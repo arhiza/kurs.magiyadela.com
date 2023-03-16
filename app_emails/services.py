@@ -14,9 +14,7 @@ def mail_about_new_comment(request, comm):
     title = f"Новый ВОПРОС к уроку {lesson.name.upper()}"
     htmly = get_template("app_emails/mail_about_new_comment.html")
     d = {"txt": txt, "lesson_url": request.build_absolute_uri(lesson.get_absolute_url()), 
-         "lesson": lesson, "admin_url": request.build_absolute_uri(reverse("admin:app_lessons_comment_change", args=[comm.pk]))}  # {% url 'admin:polls_choice_change' choice.id %}
-
-
+         "lesson": lesson, "admin_url": request.build_absolute_uri(reverse("admin:app_lessons_comment_change", args=[comm.pk]))}
     html_content = htmly.render(d)
     to = SiteSettings.objects.filter(key="order_mail").first()  # TODO comment_mail ?
     if to:

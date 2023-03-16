@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from kurs_project import settings
 from .forms import RestorePassword, LoginForm, RegistrationForm, UserUpdateForm
@@ -56,7 +57,7 @@ def confirm(request):
             profile.is_verified = True
             profile.verify_uid = ""
             profile.save()
-            # request.session["message_ok"] = "Спасибо! Е-мейл подтвержден"  # TODO 
+            messages.success(request, "Спасибо! E-mail подтвержден")
             login(request, user)
     return redirect(reverse('all_courses'))
 
@@ -71,7 +72,6 @@ class UserUpdateView(View):
 
     def post(self, request, *args, **kwargs):
         form = UserUpdateForm(request.POST, instance=request.user)
-        is_ok = False
         if form.is_valid():
             form_data = form.data
             user = request.user
@@ -80,14 +80,15 @@ class UserUpdateView(View):
             if len(password) > 0:
                 user.set_password(password)
             user.save()
-            is_ok = True
-        context = {"form": form, "is_ok": is_ok}
+            messages.success(request, "Профиль успешно сохранен")
+            return redirect(reverse('cabinet'))
+        context = {"form": form}
         return render(request, "app_users/profile.html", context=context)
 
 
 def add_profile(request, user, password):
     profile = Profile.objects.create(user=user)
-    # profile.generate_new_confirm_code()
+    messages.success(request, "Отправлено письмо для подтверждения e-mail, проверьте почту")
     mail_about_new_registration(request, user, password)
 
 
