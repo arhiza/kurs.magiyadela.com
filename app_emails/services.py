@@ -39,6 +39,16 @@ def mail_about_new_order(cfu):
         print("Настройка для отправки почты не найдена", title, html_content)
 
 
+def mail_about_confirm(request, user):
+    title = "КУРСЫ МАГИИ ДЕЛА: Подтверждение емейла"
+    htmly = get_template("app_emails/mail_about_confirm.html")
+    params = user.profile.get_new_params_for_confirm
+    link_confirm = request.build_absolute_uri(reverse('confirm')) + params
+    d = {"name": user.first_name, "link_confirm": link_confirm}
+    html_content = htmly.render(d)
+    send_mail_from_site(title, html_content, [user.email], html_content)
+
+
 def mail_about_new_registration(request, user, password):
     title = "Регистрация на Курсах от Магии дела"
     htmly = get_template("app_emails/mail_about_registration.html")

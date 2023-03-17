@@ -3,6 +3,15 @@
 {% block title %}Личный кабинет{% endblock %}
 
 {% block page %}
+{% if request.user.username == request.user.email and not request.user.profile.is_verified %}
+<p><ul class="messagelist">
+<li class="error">E-mail не подтвержден</li>
+</ul>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" name="confirm_email">Подтвердить</button>
+</form></p>
+{% endif %}
 
     <ul class="messagelist">
     {% if form.errors %}

@@ -15,7 +15,7 @@ from django.contrib import messages
 from kurs_project import settings
 from .forms import RestorePassword, LoginForm, RegistrationForm, UserUpdateForm
 from .models import Profile
-from app_emails.services import mail_about_new_registration
+from app_emails.services import mail_about_new_registration, mail_about_confirm
 
 
 def restore_password(request):
@@ -71,6 +71,10 @@ class UserUpdateView(View):
         return render(request, "app_users/profile.html", context=context)
 
     def post(self, request, *args, **kwargs):
+        if "confirm_email" in request.POST:
+            mail_about_confirm(request, request.user)
+            messages.success(request, "Письмо с ссылкой для подтверждения емейла отправлено, проверьте почту")
+            return redirect(reverse('cabinet'))
         form = UserUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
             form_data = form.data
