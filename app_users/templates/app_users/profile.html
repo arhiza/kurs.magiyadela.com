@@ -23,15 +23,14 @@
     {% endif %}
     </ul>
 
-            <form method="post">
-              {% csrf_token %}
-    {% for field in form %}
-        <p>
-            {{ field.label_tag }}<br>{{ field }}
-        </p>
-    {% endfor %}
-              <button type="submit">Сохранить</button>
-
-            </form>
+    <form method="post">
+        {% csrf_token %}
+        <p>{{ form.first_name.label_tag }}<br>{{ form.first_name }}</p>
+        <p>{{ form.say_about_new_lesson }} {{ form.say_about_new_lesson.label_tag }}</p>
+        <p>{{ form.say_about_new_comments }} {{ form.say_about_new_comments.label_tag }}</p>
+        <p>{{ form.password1.label_tag }}<br>{{ form.password1 }}</p>
+        <p>{{ form.password2.label_tag }}<br>{{ form.password2 }}</p>
+        <button type="submit">Сохранить</button>
+    </form>
 
 {% endblock %}
