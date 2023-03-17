@@ -67,7 +67,10 @@ class UserUpdateView(View):
         return super(UserUpdateView, self).dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        context = {"form": UserUpdateForm(instance=request.user)}
+        if hasattr(request.user, 'profile'):
+            context = {"form": UserUpdateForm(instance=request.user, initial={"say_about_new_lesson": request.user.profile.say_about_new_lesson, "say_about_new_comments": request.user.profile.say_about_new_comments})}
+        else:
+            context = {"form": UserUpdateForm(instance=request.user)}
         return render(request, "app_users/profile.html", context=context)
 
     def post(self, request, *args, **kwargs):
@@ -84,6 +87,11 @@ class UserUpdateView(View):
             if len(password) > 0:
                 user.set_password(password)
             user.save()
+            if hasattr(user, 'profile'):
+                profile = user.profile
+                profile.say_about_new_lesson = (form_data.get("say_about_new_lesson") == "on")
+                profile.say_about_new_comments = (form_data.get("say_about_new_comments") == "on")
+                profile.save()
             messages.success(request, "Профиль успешно сохранен")
             return redirect(reverse('cabinet'))
         context = {"form": form}

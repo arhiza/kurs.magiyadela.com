@@ -29,8 +29,10 @@ class LoginForm(forms.Form):
 class UserUpdateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['password1'].required = False
-        self.fields['password2'].required = False
+        self.fields["password1"].required = False
+        self.fields["password2"].required = False
+        self.fields["say_about_new_lesson"].required = False
+        self.fields["say_about_new_comments"].required = False
         self.label_suffix = ""
 
     password1 = forms.CharField(
@@ -46,6 +48,12 @@ class UserUpdateForm(forms.ModelForm):
     first_name = forms.CharField(
         label="Имя",
     )
+    say_about_new_lesson = forms.BooleanField(
+        label="Уведомлять о новых уроках",
+    )
+    say_about_new_comments = forms.BooleanField(
+        label="Уведомлять о новых комментариях",
+    )
 
     def clean(self):
         """Проверка на совпадение введенных паролей и остальное"""
@@ -58,4 +66,4 @@ class UserUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["first_name"]
+        fields = ["first_name"]  # , "say_about_new_lesson", "say_about_new_comments"]

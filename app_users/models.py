@@ -11,6 +11,9 @@ class Profile(models.Model):
     is_verified = models.BooleanField(default=False, verbose_name="Емейл подтвержден")
     verify_uid = models.CharField(max_length=70, verbose_name="код для ссылки подтверждения мыла")
     
+    say_about_new_lesson = models.BooleanField(default=True, verbose_name="Присылать уведомления о новых уроках")
+    say_about_new_comments = models.BooleanField(default=False, verbose_name="Присылать уведомления о новых комментариях")
+    
     def _get_new_params_for_confirm(self):
         if self.user.username == self.user.email:
             chars=string.ascii_uppercase + string.ascii_lowercase + string.digits
