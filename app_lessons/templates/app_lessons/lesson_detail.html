@@ -5,6 +5,14 @@
 {% block page %}
 
 <i><a href="{{ lesson.course.get_absolute_url }}">"{{ lesson.course }}"</a></i>
+{% if can_see or course_paid %}
+    {% if lesson.prev_lesson %}
+        <p><a href="{{ lesson.prev_lesson.get_absolute_url }}">Предыдущий урок</a></p>
+    {% endif %}
+    {% if lesson.next_lesson %}
+        <p><a href="{{ lesson.next_lesson.get_absolute_url }}">Следующий урок</a></p>
+    {% endif %}
+{% endif %}
 <h1>{{ lesson.name }}</h1>
 
 {% if lesson.course.status == "NEW" %}
@@ -35,28 +43,28 @@
     {% endif %}
 
 
-{% if course_paid__todo %}
-    <br><br>(тут должна быть кнопочка "пометить урок пройденным")
-    <br><br>(и еще должна быть форма, куда можно задать вопрос по уроку)
-{% endif %}
-
-{% for comm in lesson.published_comments.all %}
-<div class="block_comment">
-{% if comm.user.first_name %}
-    {{ comm.user.first_name }}:
-{% else %}
-    {% if comm.text_question %}
-    Анонимно:
+    {% if course_paid__TODO %}
+        <br><br>(тут должна быть кнопочка "пометить урок пройденным")
+        <br><br>(и еще должна быть форма, куда можно задать вопрос по уроку)
     {% endif %}
-{% endif %}
-{% if comm.text_question %}
-<div class="article question">{{ comm.text_question }}</div>
-{% endif %}
-{% if comm.text_answer %}
-<div class="article answer">{{ comm.text_answer|safe }}</div>
-{% endif %}
-<hr></div>
-{% endfor %}
+
+    {% for comm in lesson.published_comments.all %}
+        <div class="block_comment">
+        {% if comm.user.first_name %}
+            {{ comm.user.first_name }}:
+        {% else %}
+            {% if comm.text_question %}
+                Анонимно:
+            {% endif %}
+        {% endif %}
+        {% if comm.text_question %}
+            <div class="article question">{{ comm.text_question }}</div>
+        {% endif %}
+        {% if comm.text_answer %}
+            <div class="article answer">{{ comm.text_answer|safe }}</div>
+        {% endif %}
+        <hr></div>
+    {% endfor %}
 
 {% endif %}
 
