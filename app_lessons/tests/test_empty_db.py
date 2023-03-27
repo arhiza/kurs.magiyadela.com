@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.urls import reverse
 
 from app_lessons.models import Course, Lesson
 

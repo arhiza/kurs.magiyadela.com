@@ -5,15 +5,14 @@ from django.contrib.auth.models import User
 from app_lessons.models import Course, Lesson, CoursesForUsers
 
 USERNAME = 'test'
-USER_PASSWORD = 'xdrthnjil'
 
 
 class TestPaidCourse(TestCase):
     @classmethod
     def setUpTestData(cls):
         course1 = Course.objects.create(name="Курс1", url="test1", status=Course.OK, about="Информация о курсе")
-        lesson1 = Lesson.objects.create(name="Урок1", url="urok1", course=course1, info="Первый текст урока")
-        lesson2 = Lesson.objects.create(name="Урок2", url="urok2", course=course1, info="Второй урок курса")
+        Lesson.objects.create(name="Урок1", url="urok1", course=course1, info="Первый текст урока")
+        Lesson.objects.create(name="Урок2", url="urok2", course=course1, info="Второй урок курса")
         user = User.objects.create(username=USERNAME)
         CoursesForUsers.objects.create(course=course1, user=user, is_active=True)
 
@@ -49,6 +48,14 @@ class TestPaidCourse(TestCase):
         self.assertContains(response, course1.name)
         self.assertContains(response, course1.get_absolute_url())
         lesson2 = Lesson.objects.get(pk=2)
-        # self.assertContains(response, lesson2.name)  # вместо названия урока надпись "следующий урок"
+        self.assertContains(response, "Следующий урок")
         self.assertContains(response, lesson2.get_absolute_url())
 
+        response = self.client.get(lesson2.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, lesson2.name)
+        self.assertContains(response, lesson2.info)
+        self.assertContains(response, course1.name)
+        self.assertContains(response, course1.get_absolute_url())
+        self.assertContains(response, "Предыдущий урок")
+        self.assertContains(response, lesson1.get_absolute_url())

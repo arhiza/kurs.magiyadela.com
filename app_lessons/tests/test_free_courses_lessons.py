@@ -6,9 +6,11 @@ from app_lessons.models import Course, Lesson
 class TestFreeCourse(TestCase):
     @classmethod
     def setUpTestData(cls):
-        course3 = Course.objects.create(name="Курс3", url="kurs3", status=Course.OK, is_free=True, about="Информация о бесплатном курсе3")
-        lesson4 = Lesson.objects.create(name="Урок4", url="urok4", course=course3, info="Текст, видимый без регистрации и записи на курс.")
-        lesson5 = Lesson.objects.create(name="Урок5", url="urok5", course=course3, info="Второй текст для курса3.")
+        course3 = Course.objects.create(name="Курс3", url="kurs3", status=Course.OK, is_free=True,
+                                        about="Информация о бесплатном курсе3")
+        Lesson.objects.create(name="Урок4", url="urok4", course=course3,
+                              info="Текст, видимый без регистрации и записи на курс.")
+        Lesson.objects.create(name="Урок5", url="urok5", course=course3, info="Второй текст для курса3.")
 
     def test_main_page(self):
         response = self.client.get("/")
@@ -50,8 +52,8 @@ class TestIntroLesson(TestCase):
     @classmethod
     def setUpTestData(cls):
         course = Course.objects.create(name="Курс", url="kurs1", status=Course.OK, about="Информация о курсе.")
-        lesson_intro = Lesson.objects.create(name="Урок0", url="urok0", course=course, is_intro=True, info="Текст урока.")
-        lesson2 = Lesson.objects.create(name="Урок1", url="urok1", course=course, info="Второй текст для курса.")
+        Lesson.objects.create(name="Урок0", url="urok0", course=course, is_intro=True, info="Текст урока.")
+        Lesson.objects.create(name="Урок1", url="urok1", course=course, info="Второй текст для курса.")
 
     def test_links_to_course(self):
         course = Course.objects.get(pk=1)
@@ -68,7 +70,6 @@ class TestIntroLesson(TestCase):
         lesson = Lesson.objects.get(pk=2)
         url_lesson = lesson.get_absolute_url()
         self.assertNotContains(response, url_lesson)
-
 
     def test_links_to_lessons(self):
         lesson = Lesson.objects.get(pk=1)

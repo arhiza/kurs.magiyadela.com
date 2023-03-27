@@ -7,10 +7,12 @@ class TestAnonimVisitor(TestCase):
     @classmethod
     def setUpTestData(cls):
         course1 = Course.objects.create(name="Курс1", url="kurs1", status=Course.OK, about="Информация о курсе1")
-        lesson1 = Lesson.objects.create(name="Урок1", url="urok1", course=course1, info="Секретный текст, недоступный без записи на курс.")
-        lesson2 = Lesson.objects.create(name="Урок2", url="urok2", course=course1, info="Второй текст для курса1.")
+        Lesson.objects.create(name="Урок1", url="urok1", course=course1,
+                              info="Секретный текст, недоступный без записи на курс.")
+        Lesson.objects.create(name="Урок2", url="urok2", course=course1, info="Второй текст для курса1.")
         course2 = Course.objects.create(name="Курс2", url="kurs2", status=Course.NEW, about="Информация о курсе2")
-        lesson3 = Lesson.objects.create(name="Урок3", url="urok3", course=course2, info="Текст, доступный только админу, потому что курс неактивен.")
+        Lesson.objects.create(name="Урок3", url="urok3", course=course2,
+                              info="Текст, доступный только админу, потому что курс неактивен.")
 
     def test_main_page(self):
         response = self.client.get("/")

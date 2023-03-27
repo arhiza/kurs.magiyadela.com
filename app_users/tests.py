@@ -1,9 +1,8 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from django.test import TestCase, override_settings
+from django.test import TestCase
 from django.urls import reverse
 from .models import Profile
-from django.conf import settings
 
 
 class TestRegistration(TestCase):
@@ -18,8 +17,8 @@ class TestRegistration(TestCase):
     def test_post_registration_correct(self):
         user_login = "test@email.ururu"
         response = self.client.post(reverse('registration'), {'login': user_login,
-                                                          'fio': 'Тестовый юзер',
-                                                          'password': 'xdrthnjil'})
+                                                              'fio': 'Тестовый юзер',
+                                                              'password': 'xdrthnjil'})
         count_after = User.objects.count()
         self.assertEqual(count_after, 1)  # в базе появился один пользователь
         user = authenticate(username=user_login, password='xdrthnjil')
@@ -33,12 +32,11 @@ class TestRegistration(TestCase):
         from django.core.mail import outbox
         self.assertEqual(len(outbox), 1)
         self.assertIn(user_login, outbox[0].to)
-        
 
     def test_post_registration_not_correct(self):  # невалидная форма - логин не емейл
         response = self.client.post(reverse('registration'), {'login': 'test1',
-                                                          'fio': 'TEST',
-                                                          'password': 'xdrthnjil'})
+                                                              'fio': 'TEST',
+                                                              'password': 'xdrthnjil'})
         self.assertEqual(response.status_code, 200)  # та же страница с формой
         self.assertFormError(response, 'form', 'login', 'Некорректный адрес электронной почты')
         count_after = User.objects.count()
@@ -49,6 +47,7 @@ USERNAME_1 = 'test1'
 USERNAME_2 = 'test@test.com'
 PASSWORD = 'xdrthnjil'
 FAIL_PASS = 'fail_password'
+
 
 class TestAuthentication(TestCase):
     @classmethod
@@ -62,22 +61,22 @@ class TestAuthentication(TestCase):
 
     def test_authentication_register_correct(self):
         response = self.client.post(reverse('login'), {'login': USERNAME_1,
-                                                        'password': PASSWORD})
+                                                       'password': PASSWORD})
         self.assertRedirects(response, '/', status_code=302, target_status_code=200)
         self.assertEqual(response.client.session.get('_auth_user_id'), '1')  # залогиненность
         response = self.client.post(reverse('login'), {'login': USERNAME_2,
-                                                        'password': PASSWORD})
+                                                       'password': PASSWORD})
         self.assertRedirects(response, '/', status_code=302, target_status_code=200)
         self.assertEqual(response.client.session.get('_auth_user_id'), '2')  # залогиненность
 
     def test_authentication_register_not_correct(self):
         response = self.client.post(reverse('login'), {'login': USERNAME_1,
-                                                        'password': FAIL_PASS})
+                                                       'password': FAIL_PASS})
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'password', 'Пароль не подходит')
         self.assertEqual(response.client.session.get('_auth_user_id'), None)
         response = self.client.post(reverse('login'), {'login': USERNAME_2,
-                                                        'password': FAIL_PASS})
+                                                       'password': FAIL_PASS})
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', 'password', 'Пароль не подходит')
         # TODO тут еще надо будет проверить наличие ссылки на сброс пароля через емейл
