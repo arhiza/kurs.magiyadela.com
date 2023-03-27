@@ -1,10 +1,9 @@
 from django.conf import settings
-from django.test import override_settings
+# from django.test import override_settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.urls import reverse
 
-from app_lessons.models import CoursesForUsers
 from app_users.models import SiteSettings
 
 
@@ -13,8 +12,9 @@ def mail_about_new_comment(request, comm):
     lesson = comm.lesson
     title = f"Новый ВОПРОС к уроку {lesson.name.upper()}"
     htmly = get_template("app_emails/mail_about_new_comment.html")
-    d = {"txt": txt, "lesson_url": request.build_absolute_uri(lesson.get_absolute_url()), 
-         "lesson": lesson, "admin_url": request.build_absolute_uri(reverse("admin:app_lessons_comment_change", args=[comm.pk]))}
+    d = {"txt": txt, "lesson_url": request.build_absolute_uri(lesson.get_absolute_url()),
+         "lesson": lesson,
+         "admin_url": request.build_absolute_uri(reverse("admin:app_lessons_comment_change", args=[comm.pk]))}
     html_content = htmly.render(d)
     to = SiteSettings.objects.filter(key="order_mail").first()  # TODO comment_mail ?
     if to:
@@ -24,6 +24,7 @@ def mail_about_new_comment(request, comm):
 
 
 def mail_about_new_order(cfu):
+    # cfu: CoursesForUsers
     usermail = cfu.user.email
     if not usermail:
         usermail = cfu.user.username
@@ -74,7 +75,8 @@ def example_mail(to):
     htmly = get_template("app_emails/test_mail.html")
     d = {'username': username}
     html_content = htmly.render(d)
-    send_mail_from_site("Проверка связи", "Если это сообщение видно, значит, с тегами ничего не получилось.", [to], html_content)
+    send_mail_from_site("Проверка связи", "Если это сообщение видно, значит, с тегами ничего не получилось.",
+                        [to], html_content)
 
 
 # @override_settings(DEBUG=False)

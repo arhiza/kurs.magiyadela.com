@@ -1,4 +1,4 @@
-import logging
+# import logging
 
 from django.db.models import Prefetch
 from django.http import HttpResponseNotFound, HttpResponseRedirect
@@ -39,12 +39,13 @@ class CourseView(generic.DetailView):
                 if rel.is_active:
                     can_see = True
                 else:
-                    context['info_about_order'] = "Заявка на включение курса отправлена администратору. Скоро всё будет подключено. Но это не точно."
+                    context['info_about_order'] = "Заявка на включение курса отправлена администратору. " \
+                                                  "Скоро всё будет подключено. Но это не точно."
         else:
             loginurl = reverse("login")
             nexturl = context.get('course').get_absolute_url()
-            context['info_about_order'] = f"Запись на курс доступна <a href={loginurl}?next={nexturl}>авторизованным</a> пользователям."
-            #context['info_about_order'] = "Запись на курс доступна авторизованным пользователям."
+            context['info_about_order'] = f"Запись на курс доступна <a href={loginurl}?next=" \
+                                          f"{nexturl}>авторизованным</a> пользователям."
         if not can_see and (context.get('course').is_free or
                             (self.request.user.is_authenticated and
                              self.request.user.has_perm('app_lessons.view_lesson'))):
@@ -148,11 +149,11 @@ class CourseListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        #...
         main_page_text = SiteSettings.objects.filter(key="main_page").first()
         if main_page_text:
             context['main_page_text'] = main_page_text.text_value
         return context
+
 
 def page_not_found_view(request, exception):
     return render(request, '404.html', status=404)

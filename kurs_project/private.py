@@ -30,5 +30,5 @@ class PrivateConfig(object):
             else:
                 return self._config[key]
         except KeyError:
-            error_msg = "Private JSON-file has not key '{0}''{1}'".format(key,subkey)
+            error_msg = "Private JSON-file has not key '{0}''{1}'".format(key, subkey)
             raise ImproperlyConfigured(error_msg)

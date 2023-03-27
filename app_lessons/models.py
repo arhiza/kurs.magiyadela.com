@@ -81,7 +81,7 @@ class Lesson(models.Model):
     video = models.URLField(blank=True, null=True, verbose_name="Видео на ютубе, если есть")
     questions = models.TextField(blank=True, null=True, verbose_name="Вопросы для домашней работы")
     ordering = models.PositiveIntegerField(default=0, verbose_name="Порядок уроков в курсе")
-    
+
     @property
     def published_comments(self):
         return self.comments.filter(is_published=True)
@@ -138,7 +138,7 @@ class CoursesForUsers(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="пользователь", related_name="to_courses")
     is_active = models.BooleanField(default=False, verbose_name="On|Off")
     info = models.CharField(max_length=200, blank=True, null=True, verbose_name="примечание")
-    
+
     def to_mail(self):
         if self.is_active and hasattr(self.user, "profile"):
             if self.user.profile.is_verified:
@@ -198,7 +198,8 @@ class Comment(models.Model):
     lesson = models.ForeignKey('Lesson', on_delete=models.CASCADE,
                                related_name="comments", verbose_name="урок")
     is_published = models.BooleanField(default=False, verbose_name="опубликовано")
-    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="пользователь", related_name="user_comments")
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL,
+                             verbose_name="пользователь", related_name="user_comments")
     text_question = models.TextField(verbose_name="вопрос", blank=True, null=True)
     text_answer = models.TextField(verbose_name="ответ", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='created at')
@@ -207,7 +208,7 @@ class Comment(models.Model):
     def clean(self):
         if not self.text_question and not self.text_answer:
             raise ValidationError('Нужно заполнить вопрос или ответ')
-            
+
     def save(self, *args, **kwargs):
         super(Comment, self).save(*args, **kwargs)
         # TODO при публикации комментария админом отправить уведомления заинтересованным лицам
@@ -215,4 +216,3 @@ class Comment(models.Model):
     class Meta:
         verbose_name_plural = 'Комментарии'
         verbose_name = 'Комментарий'
-

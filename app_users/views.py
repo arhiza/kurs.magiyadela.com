@@ -33,11 +33,11 @@ def restore_password(request):
             current_user.save()
             try:  # todo тут должно быть нормальное содержимое, а не только пароль
                 send_mail(subject="Восстановление пароля",
-                      message=f'''Новые данные для входа в систему:
+                          message=f'''Новые данные для входа в систему:
 логин: {user_email}
 пароль: {new_password}''',
-                      from_email=settings.EMAIL_HOST_USER,
-                      recipient_list=[user_email])
+                          from_email=settings.EMAIL_HOST_USER,
+                          recipient_list=[user_email])
                 return HttpResponse('Письмо с новым паролем отправлено')
             except:
                 return HttpResponse('ОШИБКА: отправить письмо не удалось')
@@ -46,6 +46,7 @@ def restore_password(request):
         'form': restore_password_form
     }
     return render(request, 'app_users/restore_password.html', context=context)
+
 
 def confirm(request):
     email = request.GET.get("email", None)
@@ -61,6 +62,7 @@ def confirm(request):
             login(request, user)
     return redirect(reverse('all_courses'))
 
+
 class UserUpdateView(View):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -68,7 +70,11 @@ class UserUpdateView(View):
 
     def get(self, request, *args, **kwargs):
         if hasattr(request.user, 'profile'):
-            context = {"form": UserUpdateForm(instance=request.user, initial={"say_about_new_lesson": request.user.profile.say_about_new_lesson, "say_about_new_comments": request.user.profile.say_about_new_comments})}
+            context = {"form": UserUpdateForm(instance=request.user,
+                                              initial={"say_about_new_lesson":
+                                                       request.user.profile.say_about_new_lesson,
+                                                       "say_about_new_comments":
+                                                       request.user.profile.say_about_new_comments})}
         else:
             context = {"form": UserUpdateForm(instance=request.user)}
         return render(request, "app_users/profile.html", context=context)
@@ -99,7 +105,7 @@ class UserUpdateView(View):
 
 
 def add_profile(request, user, password):
-    profile = Profile.objects.create(user=user)
+    Profile.objects.create(user=user)
     messages.success(request, "Отправлено письмо для подтверждения e-mail, проверьте почту")
     mail_about_new_registration(request, user, password)
 
@@ -144,6 +150,7 @@ def registration_view(request):
     else:
         form = RegistrationForm()
     return render(request, 'app_users/registration.html', {'form': form, 'link_else': link_else})
+
 
 def login_view(request):
     next = request.GET.get("next", None)

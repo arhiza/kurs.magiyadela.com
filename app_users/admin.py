@@ -12,4 +12,3 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ["user", "name_hint", "name_note", "is_verified"]
     fields = ["name_hint", "name_note"]
-    

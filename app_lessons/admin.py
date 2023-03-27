@@ -62,6 +62,8 @@ def approve_orders(modeladmin, request, queryset):
     for cfu in queryset:
         cfu.is_active = True
         cfu.save()
+
+
 approve_orders.short_description = "Активировать выбранные курсы"
 
 
@@ -71,11 +73,11 @@ class CoursesForUsersAdmin(admin.ModelAdmin):
     ordering = ["is_active"]
     list_filter = ["course"]
     actions = [approve_orders]
-    
+
     @admin.display(description="Курс")
     def short_course_name(self, obj):
         return f"{obj.course.name[:15]}..."
-    
+
     @admin.display(description="Кто это")
     def user_fio(self, obj):
         res = []
