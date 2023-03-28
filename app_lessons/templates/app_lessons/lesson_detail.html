@@ -35,6 +35,8 @@
         <p><div class="article">{{ lesson.questions|safe }}</div></p>
     {% endif %}
 
+    <a href="{{ lesson.get_add_comment_url }}"><button type="submit">Задать вопрос</button></a>
+
     {% if lesson.prev_lesson %}
         <p><a href="{{ lesson.prev_lesson.get_absolute_url }}">Предыдущий урок</a></p>
     {% endif %}
@@ -45,7 +47,6 @@
 
     {% if course_paid__TODO %}
         <br><br>(тут должна быть кнопочка "пометить урок пройденным")
-        <br><br>(и еще должна быть форма, куда можно задать вопрос по уроку)
     {% endif %}
 
     {% for comm in lesson.published_comments.all %}
