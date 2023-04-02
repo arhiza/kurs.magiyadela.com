@@ -7,6 +7,21 @@ from django.urls import reverse
 from app_users.models import SiteSettings
 
 
+def mail_about_answered_comment(comm):
+    txt_question = comm.text_question
+    txt_answer = comm.text_answer
+    lesson = comm.lesson
+    title = f"Комментарий к уроку {lesson.name.upper()}"
+    htmly = get_template("app_emails/mail_about_answered_comment.html")  # TODO убрать хардкод
+    d = {"txt_question": txt_question, "txt_answer": txt_answer,
+         "lesson_url": "https://kurs.magiyadela.com" + lesson.get_absolute_url(), "lesson": lesson}
+    html_content = htmly.render(d)
+    adr = comm.adresates
+    if adr:
+        for to in adr:  # TODO встроить проверку, сколько времени заняла рассылка
+            send_mail_from_site(title, html_content, [to], html_content)
+
+
 def mail_about_new_comment(request, comm):
     txt = comm.text_question
     lesson = comm.lesson

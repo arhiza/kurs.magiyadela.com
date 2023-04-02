@@ -10,6 +10,8 @@ from django.dispatch import receiver
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 
+from app_emails.services import mail_about_answered_comment
+
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
@@ -210,6 +212,23 @@ class Comment(models.Model):
     text_answer = models.TextField(verbose_name="ответ", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='created at')
     modified_at = models.DateTimeField(auto_now=True, verbose_name='modified_at')
+    
+    @property
+    def adresates(self):
+        if self.is_published:
+            # всем, кто записан на курс и у кого включены уведомления о новых уроках и подтверждены емейлы
+            users = self.lesson.course.to_users.filter(is_active=True)
+            res = []
+            for cfu in users:
+                user = cfu.user
+                if hasattr(user, "profile") and user.profile.is_verified and user.profile.say_about_new_comments:
+                    res.append(user.email)
+            return res
+        else:
+            # только автору комментария, если подтвержден емейл
+            if self.user and hasattr(self.user, "profile") and self.user.profile.is_verified:
+                return [self.user.email]
+            return None
 
     def clean(self):
         if not self.text_question and not self.text_answer:
@@ -217,7 +236,9 @@ class Comment(models.Model):
 
     def save(self, *args, **kwargs):
         super(Comment, self).save(*args, **kwargs)
-        # TODO при публикации комментария админом отправить уведомления заинтересованным лицам
+        if self.is_published or (self.text_answer and self.user and hasattr(self.user, "profile") and self.user.profile.is_verified):
+            mail_about_answered_comment(self)
+            # при публикации комментария админом отправить уведомления заинтересованным лицам
 
     class Meta:
         verbose_name_plural = 'Комментарии'
