@@ -3,6 +3,7 @@ import os
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Q
 from django.db.models import Max
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -82,9 +83,14 @@ class Lesson(models.Model):
     questions = models.TextField(blank=True, null=True, verbose_name="Вопросы для домашней работы")
     ordering = models.PositiveIntegerField(default=0, verbose_name="Порядок уроков в курсе")
 
-    @property
     def published_comments(self):
         return self.comments.filter(is_published=True)
+
+    def view_comments(self, cur_user):
+        if cur_user.has_perm('app_lessons.change_comment'):
+            return self.comments
+        else:
+            return self.comments.filter(Q(is_published=True) | Q(user=cur_user))
 
     def _code_video(self):
         # из ссылки типа такой https://www.youtube.com/watch?v=8HDXSmDJ6Kw&list=LL

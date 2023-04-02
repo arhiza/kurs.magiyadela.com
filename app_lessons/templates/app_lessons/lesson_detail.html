@@ -49,7 +49,7 @@
         <br><br>(тут должна быть кнопочка "пометить урок пройденным")
     {% endif %}
 
-    {% for comm in lesson.published_comments.all %}
+    {% for comm in comments.all %}
         <div class="block_comment">
         {% if comm.user.first_name %}
             {{ comm.user.first_name }}:

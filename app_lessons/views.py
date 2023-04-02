@@ -103,6 +103,9 @@ class LessonView(generic.DetailView):
                                                  is_active=True).first()
             if rel:
                 context['course_paid'] = True
+            context['comments'] = lesson.view_comments(self.request.user)
+        else:
+            context['comments'] = lesson.published_comments()
         return context
 
     def dispatch(self, request, *args, **kwargs):
