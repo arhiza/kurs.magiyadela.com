@@ -93,27 +93,29 @@ class LessonView(generic.DetailView):
         lesson = context.get("lesson")
         if lesson.course.is_free or lesson.is_intro or \
                 (self.request.user.is_authenticated and
-                 self.request.user.has_perm('app_lessons.view_lesson')):
-            context['can_see'] = True
+                 self.request.user.has_perm("app_lessons.view_lesson")):
+            context["can_see"] = True
         else:
-            context['can_see'] = False
+            context["can_see"] = False
         if self.request.user.is_authenticated:
             rel = CoursesForUsers.objects.filter(user=self.request.user,
                                                  course=context.get("lesson").course,
                                                  is_active=True).first()
             if rel:
-                context['course_paid'] = True
-            context['comments'] = lesson.view_comments(self.request.user)
+                context["course_paid"] = True
+            context["comments"] = lesson.view_comments(self.request.user)
+            if self.request.user.has_perm("app_lessons.change_comment"):
+                context["can_answer"] = True
         else:
-            context['comments'] = lesson.published_comments()
+            context["comments"] = lesson.published_comments()
         return context
 
     def dispatch(self, request, *args, **kwargs):
         # смотреть уроки для неготовых курсов можно только редактору,
         # остальным - таких уроков как бы нет совсем
         res = super().dispatch(request, *args, **kwargs)
-        if res.context_data['lesson'].course.status != Course.OK:
-            if not request.user.is_authenticated or not request.user.has_perm('app_lessons.view_lesson'):
+        if res.context_data["lesson"].course.status != Course.OK:
+            if not request.user.is_authenticated or not request.user.has_perm("app_lessons.view_lesson"):
                 return HttpResponseNotFound()
         return res
 

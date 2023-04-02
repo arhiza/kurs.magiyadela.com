@@ -49,22 +49,26 @@
         <br><br>(тут должна быть кнопочка "пометить урок пройденным")
     {% endif %}
 
+
+    {% if comments.count > 0 %}
+    <div class="block_comment">
+    <h3>Обсуждение урока</h3>
+    <hr></div>
+    {% endif %}
     {% for comm in comments.all %}
-        <div class="block_comment">
+        <div class="block_comment{% if not comm.is_published %} hide{% endif %}">
         {% if comm.user.first_name %}
-            {{ comm.user.first_name }}:
+            <b>{{ comm.user.first_name }}:</b>
         {% else %}
             {% if comm.text_question %}
-                Анонимно:
+                <b>Анонимно:</b>
             {% endif %}
         {% endif %}
-        {% if comm.text_question %}
-            <div class="article question">{{ comm.text_question }}</div>
-        {% endif %}
+        <div class="article">{% if comm.text_question %}<i>{{ comm.text_question }}</i>{% endif %}
         {% if comm.text_answer %}
-            <div class="article answer">{{ comm.text_answer|safe }}</div>
-        {% endif %}
-        <hr></div>
+<b>Ответ автора:</b>
+{{ comm.text_answer|safe }}{% endif %}</div>{% if can_answer %}<a href="{% url 'admin:app_lessons_comment_change' comm.pk %}">ответить</a>{% endif %}
+        </div><hr>
     {% endfor %}
 
 {% endif %}
