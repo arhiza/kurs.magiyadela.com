@@ -1,0 +1,30 @@
+{% extends 'base_mobile.html' %}
+
+{% block title %}Тестовая страница{% endblock %}
+{% block title_1 %}Тестовая страница{% endblock %}
+
+{% block page %}
+{% if main_page_text %}
+    <div class="article">{{ main_page_text|safe }}</div>
+{% else %}
+<p>На этом сайте хранятся авторские материалы Башинской Анны по прошедшим курсам по Эзотерическому Маркетингу и Дизайну Человека.</p>
+<p>Здесь вы можете получить доступ к их самостоятельному изучению, а также записаться на будущие группы.</p>
+<p>Дата ближайшего курса будет озвучена тут.</p>
+{% endif %}
+
+{% if categories|length == 0 %}
+   Ничего нет. Попробуйте зайти сюда когда-нибудь потом.
+{% else %}
+    {% for category in categories %}
+        <h2>{{ category.name }}</h2>
+        <ul>
+        {% for course in category.courses.all %}
+            {% if course.url %}
+        <li{% if course.is_free %} class="free"{% endif %}><a href="{{ course.get_absolute_url }}">{{ course.name }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

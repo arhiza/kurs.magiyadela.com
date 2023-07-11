@@ -160,5 +160,38 @@ class CourseListView(generic.ListView):
         return context
 
 
+class TMPView(generic.ListView):
+    model = Course
+    context_object_name = 'categories'
+    template_name = 'app_lessons/category_list_1.html'
+
+    def get_queryset(self):
+        ok_courses = Course.objects.filter(status=Course.OK)
+        return Category.objects.prefetch_related(Prefetch('courses', queryset=ok_courses))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        main_page_text = SiteSettings.objects.filter(key="main_page").first()
+        if main_page_text:
+            context['main_page_text'] = main_page_text.text_value
+        return context
+
+class TMPMobileView(generic.ListView):
+    model = Course
+    context_object_name = 'categories'
+    template_name = 'app_lessons/category_list_1.html'
+
+    def get_queryset(self):
+        ok_courses = Course.objects.filter(status=Course.OK)
+        return Category.objects.prefetch_related(Prefetch('courses', queryset=ok_courses))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_mobile"] = True
+        main_page_text = SiteSettings.objects.filter(key="main_page").first()
+        if main_page_text:
+            context['main_page_text'] = main_page_text.text_value
+        return context
+
 def page_not_found_view(request, exception):
     return render(request, '404.html', status=404)
