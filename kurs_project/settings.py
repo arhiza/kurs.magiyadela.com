@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'kurs_project.middleware.mobile_middleware.MobileMiddleware',
 ]
 
 if DEBUG:
@@ -57,7 +58,7 @@ if DEBUG:
     INTERNAL_IPS = [
         '127.0.0.1',
     ]
-    MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE
+    #MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE
 
 ROOT_URLCONF = 'kurs_project.urls'
 
@@ -186,4 +187,3 @@ EMAIL_HOST = prv.get('EMAIL', 'HOST')
 EMAIL_HOST_USER = prv.get('EMAIL', 'HOST_USER')
 EMAIL_HOST_PASSWORD = prv.get('EMAIL', 'HOST_PASSWORD')
 EMAIL_PORT = prv.get('EMAIL', 'HOST_PORT')
-

@@ -1,19 +1,19 @@
 {% load static %}
 
 		    <ul class="menu-tree parent-links">
-                       <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-type-custom menu-item-object-custom menu-item-home tappable">{% if is_mobile %}<img src='{% static "/images/Paper.png" %}' alt="menu-icon">{% endif %}<a href="http://magiyadela.com/">Магия дела</a></li>
+                       <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-type-custom menu-item-object-custom menu-item-home tappable">{% if request.is_mobile %}<img src='{% static "/images/Paper.png" %}' alt="menu-icon">{% endif %}<a href="http://magiyadela.com/">Магия дела</a></li>
                        {% if request.user.is_authenticated %}
                        <!-- li id="menu-item-2" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-has-children menu-item-2"><a href="...">Мои курсы</a>
                        ...
                        </li -->
-                       <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-type-custom menu-item-object-custom menu-item-home tappable">{% if is_mobile %}<img src='{% static "/images/Paper.png" %}' alt="menu-icon">{% endif %}<a href="{% url 'cabinet' %}">Личный кабинет</a></li>
+                       <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-type-custom menu-item-object-custom menu-item-home tappable">{% if request.is_mobile %}<img src='{% static "/images/Paper.png" %}' alt="menu-icon">{% endif %}<a href="{% url 'cabinet' %}">Личный кабинет</a></li>
                        {% if request.user.is_staff %}
-                       <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-type-custom menu-item-object-custom menu-item-home tappable">{% if is_mobile %}<img src='{% static "/images/Paper.png" %}' alt="menu-icon">{% endif %}<a href="{% url 'admin:index' %}">Админка</a></li>
+                       <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-type-custom menu-item-object-custom menu-item-home tappable">{% if request.is_mobile %}<img src='{% static "/images/Paper.png" %}' alt="menu-icon">{% endif %}<a href="{% url 'admin:index' %}">Админка</a></li>
                        {% endif %}
-                       <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-type-custom menu-item-object-custom menu-item-home tappable">{% if is_mobile %}<img src='{% static "/images/Paper.png" %}' alt="menu-icon">{% endif %}<a href="{% url 'logout' %}">ВЫХОД</a></li>
+                       <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-type-custom menu-item-object-custom menu-item-home tappable">{% if request.is_mobile %}<img src='{% static "/images/Paper.png" %}' alt="menu-icon">{% endif %}<a href="{% url 'logout' %}">ВЫХОД</a></li>
                        {% else %}
-                       <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-type-custom menu-item-object-custom menu-item-home tappable">{% if is_mobile %}<img src='{% static "/images/Paper.png" %}' alt="menu-icon">{% endif %}<a href="{% url 'login' %}">Вход</a></li>
-                       <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-type-custom menu-item-object-custom menu-item-home tappable">{% if is_mobile %}<img src='{% static "/images/Paper.png" %}' alt="menu-icon">{% endif %}<a href="{% url 'registration' %}">Регистрация</a></li>
+                       <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-type-custom menu-item-object-custom menu-item-home tappable">{% if request.is_mobile %}<img src='{% static "/images/Paper.png" %}' alt="menu-icon">{% endif %}<a href="{% url 'login' %}">Вход</a></li>
+                       <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-type-custom menu-item-object-custom menu-item-home tappable">{% if request.is_mobile %}<img src='{% static "/images/Paper.png" %}' alt="menu-icon">{% endif %}<a href="{% url 'registration' %}">Регистрация</a></li>
                        {% endif %}
                    </ul>
 

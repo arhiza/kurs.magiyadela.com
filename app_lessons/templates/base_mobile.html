@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--link rel="stylesheet" type="text/css" href='{% static "admin/css/responsive.css" %}'-->
 
-    {% if is_mobile %}
+    {% if request.is_mobile %}
     <script type="text/javascript" src='{% static "js/jquery.js" %}'></script>
     <script type="text/javascript" src='{% static "js/wptouch-6f557450ff1385557b353385fa635354b6fd1d11.js" %}'></script>
     <link href='{% static "/css/main_mobile.css" %}' rel='stylesheet' type='text/css'>
@@ -28,12 +28,12 @@
 
 </head>
 
-<!-- body class="css-videos dark-header light-body circles" -->
-<body class="page-template-default page page-id-32 css-videos tablet landscape android theme-bauhaus dark-header light-body light-post-head circles off-canvas">
-    {% if is_mobile %}
+<body class="css-videos dark-header light-body circles">
+<!-- body class="page-template-default page page-id-32 css-videos tablet landscape android theme-bauhaus dark-header light-body light-post-head circles off-canvas" -->
+    {% if request.is_mobile %}
     <div class="pushit pushit-right" style="transition: -webkit-transform 0.33s cubic-bezier(0.29, 0.05, 0.14, 0.87) 0s;">
         <div id="menu" class="wptouch-menu show-hide-menu">
-            {% include "menu.html" with mobile=True %}
+            {% include "menu.html" %}
         </div>
     </div>
 
@@ -64,7 +64,7 @@
     {% endif %}
 
 
-       {% if is_mobile %}
+       {% if request.is_mobile %}
        <div id="content">
            <div class="post-page-head-area bauhaus">
                 <h2 class="post-title heading-font">{% block title_1 %}{% endblock %}</h2>
@@ -78,7 +78,7 @@
             {% block page %}{% endblock %}
 
             </div> <!-- content -->
-        {% if is_mobile %}
+        {% if request.is_mobile %}
            </div>
     </div> <!-- page-wrapper -->
     <div id="pushit-overlay"></div>
