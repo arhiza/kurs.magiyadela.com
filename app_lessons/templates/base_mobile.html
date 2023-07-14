@@ -68,7 +68,8 @@
        <div id="content">
            <div class="post-page-head-area bauhaus">
                 <h2 class="post-title heading-font">{% block title_1 %}{% endblock %}</h2>
-            </div>
+           </div>
+           <div id="mobile_page">
        {% else %}
         <div id="main">
             <div id="content">
@@ -78,6 +79,7 @@
 
             </div> <!-- content -->
         {% if is_mobile %}
+           </div>
     </div> <!-- page-wrapper -->
     <div id="pushit-overlay"></div>
         {% else %}

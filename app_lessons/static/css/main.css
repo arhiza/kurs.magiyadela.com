@@ -23,18 +23,11 @@ body {
   width: 100%;
 }
 
-ul#head_menu {
-  padding: 0;
-}
-#head_menu li {
-  display: inline-block;
-  padding-left: 30px;
-}
 
-li.free_old {
+li.free {
   list-style-image: url("/static/admin/img/icon-viewlink.svg");
 }
-li.free {
+li.free_ {
   list-style-image: url("/static/images/free.png");
 }
 
