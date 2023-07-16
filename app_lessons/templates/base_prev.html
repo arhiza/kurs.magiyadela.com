@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <!--link href='{% static "/admin/css/base.css" %}' rel='stylesheet' type='text/css'-->
+    <link href='{% static "/css/main.css" %}' rel='stylesheet' type='text/css'>
+
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href='{% static "admin/css/responsive.css" %}'>
+</head>
+<body>
+<div id="wrapper">
+
+    <div id="header">
+        <div class="top">
+	    <div class="logo">
+<a href="{% url 'all_courses' %}"><img class="aligncenter";" alt="Магия дела" src="/static/images/logo11.jpg" width="170" height="90" /></a>
+	    </div>
+	    <div id="botmenu">
+		<div id="submenu" class="menu-glavnoe-menyu-container">
+		    <ul id="web2feel" class="sfmenu">
+                       <li id="menu-item-1" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1"><a href="http://magiyadela.com/">Магия дела</a></li>
+                       {% if request.user.is_authenticated %}
+                       <!-- li id="menu-item-2" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-has-children menu-item-2"><a href="...">Мои курсы</a>
+                       ...
+                       </li -->
+                       <li id="menu-item-5" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-5"><a href="{% url 'cabinet' %}">Личный кабинет</a></li>
+                       {% if request.user.is_staff %}
+                       <li id="menu-item-7" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-7"><a href="{% url 'admin:index' %}">Админка</a></li>
+                       {% endif %}
+                       <li id="menu-item-6" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-6"><a href="{% url 'logout' %}">ВЫХОД</a></li>
+                       {% else %}
+                       <li id="menu-item-3" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-3"><a href="{% url 'login' %}">Вход</a></li>
+                       <li id="menu-item-4" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-4"><a href="{% url 'registration' %}">Регистрация</a></li>
+                       {% endif %}
+                   </ul>
+               </div>
+           </div>
+	    <div class="conta">
+                <a href="http://magiyadela.com/kontakty/"><img class="aligncenter";" alt="Магия дела" src="/static/images/CONTacts.png" /></a>
+	    </div>		
+        </div>
+    </div>
+
+    {% if messages %}
+    <ul class="messagelist">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+<div id="main">
+<div id="content">
+
+{% block page %}{% endblock %}
+
+</div>
+
+<div id="sidebar">
+
+<!-- Sidebar widgets -->
+<ul>
+    <li class="sidebox widget_nav_menu">
+	<h3 class="sidetitl">Личный кабинет</h3>
+        {% if request.user.is_authenticated %}
+	<div class="menu-stati-container">
+	    <ul id="menu-stati" class="menu">
+	        <li id="menu-item-1688" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1688"><a href="{% url 'logout' %}">Выход</a></li>
+	        <li id="menu-item-1688" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1688"><a href="{% url 'cabinet' %}">Поменять пароль</a></li>
+            </ul>
+        </div>
+	<h3 class="sidetitl">Мои курсы</h3>
+	<div class="menu-stati-container">
+	    <ul id="menu-stati" class="menu">
+	        {% if request.user.to_courses.count > 0 %}
+	            {% for u_course in request.user.to_courses.all %}
+                        <li id="menu-item-1688" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1688"><a href="{{ u_course.course.get_absolute_url }}">{{ u_course.course.name }}</a></li>
+	            {% endfor %}
+	        {% else %}
+                <li id="menu-item-826" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-826"><a href="{% url 'all_courses' %}">Выберите тут...</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        {% else %}
+	<div class="menu-stati-container">
+	    <ul id="menu-stati" class="menu">
+	        <li id="menu-item-1688" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1688"><a href="{% url 'login' %}">Вход</a></li>
+	        <li id="menu-item-1688" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1688"><a href="{% url 'registration' %}">Регистрация</a></li>
+            </ul>
+        </div>
+        {% endif %}
+    </li>
+</ul>
+
+</div>
+<div class="clear"></div>
+
+</div>
+</div>
+</body>
+</html>
