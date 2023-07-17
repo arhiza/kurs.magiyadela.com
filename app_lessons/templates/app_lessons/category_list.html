@@ -20,7 +20,7 @@
         <ul>
         {% for course in category.courses.all %}
             {% if course.url %}
-        <li{% if course.is_free %} class="free"{% endif %}><a href="{{ course.get_absolute_url }}">{{ course.name }}</a></li>
+        <li class="{% if course.is_free %}free{% else %}need_pay{% endif %}"><a href="{{ course.get_absolute_url }}">{{ course.name }}</a></li>
             {% endif %}
         {% endfor %}
         </ul>

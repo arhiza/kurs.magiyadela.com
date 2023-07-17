@@ -23,6 +23,9 @@ body {
 }
 
 
+li.need_pay {
+  list-style-type: square;
+}
 li.free {
   list-style-image: url("/static/admin/img/icon-viewlink.svg");
 }
