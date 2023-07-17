@@ -104,33 +104,21 @@
 <ul>
     <li class="sidebox widget_nav_menu">
 	<h3 class="sidetitl">Личный кабинет</h3>
-        {% if request.user.is_authenticated %}
 	<div class="menu-stati-container">
 	    <ul class="menu">
-	        <li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="{% url 'logout' %}">Выход</a></li>
-	        <li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="{% url 'cabinet' %}">Поменять пароль</a></li>
+	    {% for name, url in request.right_menu %}
+                <li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="{{ url }}">{{ name }}</a></li>
+            {% endfor %}
             </ul>
         </div>
 	<h3 class="sidetitl">Мои курсы</h3>
 	<div class="menu-stati-container">
 	    <ul class="menu">
-	        {% if request.user.to_courses.count > 0 %}
-	            {% for u_course in request.user.to_courses.all %}
-                        <li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="{{ u_course.course.get_absolute_url }}">{{ u_course.course.name }}</a></li>
-	            {% endfor %}
-	        {% else %}
-                <li class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent"><a href="{% url 'all_courses' %}">Выберите тут...</a></li>
-                {% endif %}
+	        {% for name, url in request.my_courses_menu %}
+	            <li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="{{ url }}">{{ name }}</a></li>
+	        {% endfor %}
             </ul>
         </div>
-        {% else %}
-	<div class="menu-stati-container">
-	    <ul class="menu">
-	        <li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="{% url 'login' %}">Вход</a></li>
-	        <li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="{% url 'registration' %}">Регистрация</a></li>
-            </ul>
-        </div>
-        {% endif %}
     </li>
 </ul>
 
