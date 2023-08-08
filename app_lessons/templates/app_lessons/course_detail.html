@@ -35,11 +35,11 @@
 </p>
 {% if course.lessons.all|length > 0 %}
 <h2>Уроки курса</h2>
-<ul>
+<ul class="course_list">
 {% for lesson in course.lessons.all %}
     {% if lesson.url %}
-    <li{% if lesson_is_done %} class="done"{% endif %}>
-    {% if lesson.is_child %}<ul><li>{% endif %}
+    <li class="{% if lesson.is_child %}{% else %}lesson{% endif %} {% if lesson_is_done %}done{% endif %}">
+    {% if lesson.is_child %}<ul><li class="lesson">{% endif %}
         {% if can_see or lesson.is_intro %}
     <a href="{{ lesson.get_absolute_url }}">{{ lesson.name }}</a>
         {% else %}

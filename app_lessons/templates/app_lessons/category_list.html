@@ -17,7 +17,7 @@
 {% else %}
     {% for category in categories %}
         <h2>{{ category.name }}</h2>
-        <ul>
+        <ul class="course_list">
         {% for course in category.courses.all %}
             {% if course.url %}
         <li class="{% if course.is_free %}free{% else %}need_pay{% endif %}"><a href="{{ course.get_absolute_url }}">{{ course.name }}</a></li>
