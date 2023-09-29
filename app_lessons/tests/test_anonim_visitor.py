@@ -13,6 +13,7 @@ class TestAnonimVisitor(TestCase):
         course2 = Course.objects.create(name="Курс2", url="kurs2", status=Course.NEW, about="Информация о курсе2")
         Lesson.objects.create(name="Урок3", url="urok3", course=course2,
                               info="Текст, доступный только админу, потому что курс неактивен.")
+        course3 = Course.objects.create(name="Курс3", url="kurs3", status=Course.PROMO, about="Информация о курсе3")
 
     def test_main_page(self):
         response = self.client.get("/")
@@ -20,11 +21,15 @@ class TestAnonimVisitor(TestCase):
         url1 = course.get_absolute_url()
         course = Course.objects.get(pk=2)
         url2 = course.get_absolute_url()
+        course = Course.objects.get(pk=3)
+        url3 = course.get_absolute_url()
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Курс1")
         self.assertNotContains(response, "Курс2")
+        self.assertContains(response, "Курс3")
         self.assertContains(response, url1)
         self.assertNotContains(response, url2)
+        self.assertContains(response, url3)
 
     def test_links_to_courses(self):
         course = Course.objects.get(pk=1)

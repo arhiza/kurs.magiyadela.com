@@ -29,9 +29,11 @@ class Category(models.Model):
 class Course(models.Model):
     OK = 'OK'
     NEW = 'NEW'
+    PROMO = 'FLY'  # butterfly :)
     STATUS_CHOICES = [
         (OK, 'Готово'),
         (NEW, 'Редактируется'),
+        (PROMO, 'Новый (Промо)'),
     ]
     status = models.CharField(
         max_length=3,

@@ -18,6 +18,9 @@ body {
 .course_list li {
     list-style-type: none; /* Убираем маркеры у списка */
 }
+li.new_kurs:before {
+    content: " 🦋 ";
+}
 li.need_pay:before {
     content: " 🔒 "; /* Добавляем в качестве маркера символ */
 }

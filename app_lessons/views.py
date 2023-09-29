@@ -59,7 +59,7 @@ class CourseView(generic.DetailView):
         res = super().dispatch(request, *args, **kwargs)
         if request.method == "POST":
             return res
-        if res.context_data['course'].status != Course.OK:
+        if res.context_data['course'].status == Course.NEW:
             if not request.user.is_authenticated or not request.user.has_perm('app_lessons.view_course'):
                 return HttpResponseNotFound()
         return res
@@ -114,7 +114,7 @@ class LessonView(generic.DetailView):
         # смотреть уроки для неготовых курсов можно только редактору,
         # остальным - таких уроков как бы нет совсем
         res = super().dispatch(request, *args, **kwargs)
-        if res.context_data["lesson"].course.status != Course.OK:
+        if res.context_data["lesson"].course.status == Course.NEW:
             if not request.user.is_authenticated or not request.user.has_perm("app_lessons.view_lesson"):
                 return HttpResponseNotFound()
         return res
@@ -149,7 +149,7 @@ class CourseListView(generic.ListView):
     context_object_name = 'categories'
 
     def get_queryset(self):
-        ok_courses = Course.objects.filter(status=Course.OK)
+        ok_courses = Course.objects.exclude(status=Course.NEW)
         return Category.objects.prefetch_related(Prefetch('courses', queryset=ok_courses))
 
     def get_context_data(self, **kwargs):

@@ -11,6 +11,8 @@ class TestFreeCourse(TestCase):
         Lesson.objects.create(name="Урок4", url="urok4", course=course3,
                               info="Текст, видимый без регистрации и записи на курс.")
         Lesson.objects.create(name="Урок5", url="urok5", course=course3, info="Второй текст для курса3.")
+        course = Course.objects.create(name="Курс4", url="kurs4", status=Course.PROMO, is_free=True,
+                                        about="Информация о бесплатном курсе4")
 
     def test_main_page(self):
         response = self.client.get("/")
@@ -19,6 +21,10 @@ class TestFreeCourse(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Курс3")
         self.assertContains(response, url1)
+        course = Course.objects.get(pk=2)
+        url2 = course.get_absolute_url()
+        self.assertContains(response, "Курс4")
+        self.assertContains(response, url2)
 
     def test_links_to_courses(self):
         course = Course.objects.get(pk=1)
